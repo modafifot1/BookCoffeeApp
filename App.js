@@ -1,35 +1,12 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import CategoryListItem from "./components/CategoryListItem";
+import AppNavigator from "./AppNavigator";
+import { Provider } from "react-redux";
+import store from "./store";
+
 export default function App() {
   return (
-    <View>
-      <ScrollView>
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-        <CategoryListItem />
-      </ScrollView>
-    </View>
+    <Provider store={store}>
+      <AppNavigator></AppNavigator>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "stretch",
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-});
