@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export const SelectedCartItem = ({ item }) => {
+export const SelectedCartItem = ({ item, SubComponent }) => {
   return (
     <View
       style={{
@@ -116,6 +116,7 @@ export const SelectedCartItem = ({ item }) => {
           </Text>
         </Text>
       </View>
+      {SubComponent && <SubComponent></SubComponent>}
     </View>
   );
 };

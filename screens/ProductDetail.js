@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,14 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import StarRating from "react-native-star-rating";
 import { vh } from "../ultils";
 import { AddButton, BuyButton, VolunmButton } from "../components/MyButton";
-import { useState } from "react";
+import { Feedback } from "../components/Feedback";
+import { ScrollView } from "react-native-gesture-handler";
 const product = {
   confirmed: true,
   _id: "60a5ecdd98cf780015b07baal",
@@ -28,6 +30,56 @@ const product = {
   numOfFeedbacks: 1,
   numOfStars: 5,
   quantity: 2,
+  feedbacks: [
+    {
+      _id: "60a63775ee375d0015b91b3d",
+      userId: "6076b2ecf8402efee33463c9",
+      userName: "Tiến Ngô Văn",
+      content: "Nước bổ dưỡng",
+      numOfStars: 5,
+      avataUrl:
+        "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+      createAt: "2021-05-20T10:18:29.902Z",
+      reply: [
+        {
+          _id: "61290c3f8d975c00168225b7",
+          userName: "Admin Do an CNPM",
+          content: "Cám ơn tiến đã ủng hộ!",
+          createAt: "2021-08-27T16:01:03.952Z",
+        },
+        {
+          _id: "61298a315b6609001683fafd",
+          userName: "Admin Do an CNPM",
+          content: "Cam on ban",
+          createAt: "2021-08-28T00:58:25.203Z",
+        },
+      ],
+    },
+    {
+      _id: "60a63775ee375d00sss15b91b3d",
+      userId: "6076b2ecf8402efee33463c9",
+      userName: "Tiến Ngô Văn",
+      content: "Nước bổ dưỡng",
+      numOfStars: 5,
+      avataUrl:
+        "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+      createAt: "2021-05-20T10:18:29.902Z",
+      reply: [
+        {
+          _id: "61290c3f8d975c00168225b7",
+          userName: "Admin Do an CNPM",
+          content: "Cám ơn tiến đã ủng hộ!",
+          createAt: "2021-08-27T16:01:03.952Z",
+        },
+        {
+          _id: "61298a315b6609001683fafd",
+          userName: "Admin Do an CNPM",
+          content: "Cam on ban",
+          createAt: "2021-08-28T00:58:25.203Z",
+        },
+      ],
+    },
+  ],
 };
 
 export const ProductDetailScreen = ({ route }) => {
@@ -38,12 +90,8 @@ export const ProductDetailScreen = ({ route }) => {
   };
   const onCart = () => {};
   return (
-    <View style={styles.productDetailContainer}>
-      <View
-        style={{
-          height: "100%",
-        }}
-      >
+    <ScrollView style={styles.productDetailContainer}>
+      <View>
         <View style={{ alignItems: "center" }}>
           <Image
             source={{ uri: product.imageUrl }}
@@ -134,7 +182,28 @@ export const ProductDetailScreen = ({ route }) => {
           <BuyButton label={"Mua ngay"}></BuyButton>
         </View>
       </View>
-    </View>
+      <View style={styles.feedback}>
+        <View style={styles.topFeedback}>
+          <Text>{`Đánh giá & nhận xét (${product.numOfFeedbacks})`}</Text>
+          <View style={{ flexDirection: "row", marginVertical: 10 }}>
+            <StarRating
+              disabled={true}
+              maxStars={5}
+              rating={product.numOfStars || 0}
+              fullStarColor={"#e0dc00"}
+              starSize={18}
+              starStyle={{ marginLeft: 5 }}
+            ></StarRating>
+            <View style={{ marginLeft: 10 }}>
+              <Text>{`${product.numOfStars}/5 sao`}</Text>
+            </View>
+          </View>
+        </View>
+        {product.feedbacks.map((item) => (
+          <Feedback feedback={item} key={item._id}></Feedback>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
@@ -193,5 +262,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "flex-start",
     width: "50%",
+  },
+  topFeedback: {},
+  feedback: {
+    borderTopWidth: 4,
+    borderTopColor: "#ccd6dd",
+    paddingTop: 10,
+    marginTop: 10,
+    paddingHorizontal: 20,
   },
 });
