@@ -1,9 +1,8 @@
 import React, { useImperativeHandle, useState, forwardRef } from "react";
-import { StyleSheet, View, StatusBar } from "react-native";
+import { StyleSheet, View, StatusBar, TouchableOpacity } from "react-native";
 import { SearchInput } from "./TextInput";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { vh, vw } from "../ultils";
-import { TouchableOpacity } from "react-native-gesture-handler";
 const TopBar = forwardRef((props, ref) => {
   const [opacity, setOpacity] = useState(0);
   const onScrollBar = (e) => {

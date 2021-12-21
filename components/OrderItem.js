@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, Touchable, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { vw } from "../ultils";
 import { SelectedCartItem } from "./SelectedCartItem";
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,7 +22,7 @@ const order = {
     quantity: 2,
   },
 };
-export const OrderItem = () => {
+export const OrderItem = ({ navigation }) => {
   return (
     <View>
       <View
@@ -35,27 +34,32 @@ export const OrderItem = () => {
           width: vw(100),
         }}
       >
-        <View style={styles.selectedTable}>
-          <Text> Đơn hàng bàn số: </Text>
-          <Text
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 20,
-              borderWidth: 1,
-              borderColor: "#e83e52",
-              color: "white",
-              backgroundColor: "#e83e52",
-              textAlign: "center",
-              lineHeight: 18,
-              fontSize: 12,
-            }}
-          >
-            {5}
-          </Text>
-        </View>
         <View>
-          <Text>{`Số sản phẩm: ${5}`}</Text>
+          <View style={styles.selectedTable}>
+            <Text> Đơn hàng bàn số: </Text>
+            <Text
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: "#e83e52",
+                color: "white",
+                backgroundColor: "#e83e52",
+                textAlign: "center",
+                lineHeight: 18,
+                fontSize: 12,
+              }}
+            >
+              {5}
+            </Text>
+          </View>
+          <View>
+            <Text>{` Số lượng sản phẩm ${5}`}</Text>
+          </View>
+        </View>
+        <View style={{ alignSelf: "flex-start" }}>
+          <Text style={{ color: "#e83e52" }}>{`Hoàn thành`}</Text>
         </View>
       </View>
       <SelectedCartItem
@@ -66,7 +70,14 @@ export const OrderItem = () => {
               colors={["rgba(232, 62, 82,0.8)", "rgba(232, 62, 82, 1)"]}
               style={styles.viewDetailsContainer}
             >
-              <TouchableOpacity style={styles.viewDetailsButton}>
+              <TouchableOpacity
+                style={styles.viewDetailsButton}
+                onPress={() =>
+                  navigation.navigate("OrderDetail", {
+                    orderId: order._id,
+                  })
+                }
+              >
                 <Text style={{ color: "gray" }}>Xem thêm sản phẩm</Text>
               </TouchableOpacity>
             </View>
@@ -79,7 +90,7 @@ export const OrderItem = () => {
 
 const styles = StyleSheet.create({
   selectedTable: {
-    paddingVertical: 10,
+    paddingBottom: 10,
     // justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,

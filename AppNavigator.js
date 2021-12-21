@@ -12,6 +12,7 @@ import {
   SignupScreen,
   SelectedcartsScreen,
   ProductDetailScreen,
+  OrderDetailScreen,
 } from "./screens";
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./ultils";
@@ -56,6 +57,10 @@ const OrderStackScreen = () => {
         name="Order"
         component={OrdersScreen}
         options={{ title: "Orders" }}
+      ></OrderStack.Screen>
+      <OrderStack.Screen
+        name="OrderDetail"
+        component={OrderDetailScreen}
       ></OrderStack.Screen>
     </OrderStack.Navigator>
   );

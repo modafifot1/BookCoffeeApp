@@ -1,6 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import StarRating from "react-native-star-rating";
 import { convert2HistoryTime } from "../ultils";
 // const feedback = {

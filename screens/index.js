@@ -6,7 +6,8 @@ import LoginScreen from "./LoginScreen";
 import SignupScreen from "./SignupScreen";
 import CategoryScreen from "./categoryScreen";
 import { SelectedcartsScreen } from "./Selectedcarts";
-import {ProductDetailScreen} from "./ProductDetail";
+import { ProductDetailScreen } from "./ProductDetail";
+import { OrderDetailScreen } from "./OrderDetail";
 export {
   ProductsScreen,
   CartsScreen,
@@ -16,5 +17,6 @@ export {
   SignupScreen,
   CategoryScreen,
   SelectedcartsScreen,
-  ProductDetailScreen
+  ProductDetailScreen,
+  OrderDetailScreen,
 };

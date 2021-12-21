@@ -7,13 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import StarRating from "react-native-star-rating";
 import { vh } from "../ultils";
 import { AddButton, BuyButton, VolunmButton } from "../components/MyButton";
 import { Feedback } from "../components/Feedback";
-import { ScrollView } from "react-native-gesture-handler";
 const product = {
   confirmed: true,
   _id: "60a5ecdd98cf780015b07baal",
