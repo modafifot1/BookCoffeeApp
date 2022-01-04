@@ -18,8 +18,6 @@ axiosClient.interceptors.response.use(
     return res;
   },
   (err) => {
-    // const dispatch = useDispatch();
-    console.log("Error: ", err.response.data);
     throw err;
   }
 );

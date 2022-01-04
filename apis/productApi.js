@@ -7,4 +7,7 @@ export const productApi = {
   getProductById(productId) {
     return axiosClient.get(`/foods/${productId}`);
   },
+  updateProductById(productId) {
+    return axiosClient.put(`/foods/${productId}`);
+  },
 };

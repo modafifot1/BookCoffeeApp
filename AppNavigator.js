@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./ultils";
 import { setToken } from "./reducers/authSlice";
+import { getCartItems } from "./reducers/cartsSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native";
 const HomeStack = createNativeStackNavigator();
@@ -83,9 +84,16 @@ const Tab = createMaterialBottomTabNavigator();
 
 export default function AppNavigator() {
   const { loading, token, error } = useSelector((state) => state.auth);
-  console.log("Token: ", token);
-
+  const { numOfItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (token) {
+      dispatch(
+        getCartItems((res) => {
+        })
+      );
+    }
+  }, [token]);
   useEffect(() => {
     async function fetchData() {
       const newToken = await getData("token");
@@ -141,7 +149,13 @@ export default function AppNavigator() {
           }}
         >
           <Tab.Screen name="HomeStack" component={HomeStackScreen}></Tab.Screen>
-          <Tab.Screen name="CartStack" component={CartStackScreen}></Tab.Screen>
+          <Tab.Screen
+            name="CartStack"
+            component={CartStackScreen}
+            options={{
+              tabBarBadge: numOfItems,
+            }}
+          ></Tab.Screen>
           <Tab.Screen
             name="OrderStack"
             component={OrderStackScreen}

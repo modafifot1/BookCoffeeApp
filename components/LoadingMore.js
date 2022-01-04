@@ -23,4 +23,14 @@ const LoadingMore = forwardRef((props, ref) => {
     <View></View>
   );
 });
+
+export const Loading = () => {
+  return (
+    <ActivityIndicator
+      size={"large"}
+      color={"tomato"}
+      style={{ marginTop: 20 }}
+    ></ActivityIndicator>
+  );
+};
 export default LoadingMore;

@@ -1,22 +1,52 @@
 import React, { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { AddButton, VolunmButton } from "./MyButton";
+import { AddButton, VolunmButtonUpdate } from "./MyButton";
 import CheckBox from "@react-native-community/checkbox";
 import Ionicon from "react-native-vector-icons/Ionicons";
-export const CartItem = ({ item, allChecked }) => {
+import { updateCart } from "../reducers/cartsSlice";
+import { useDispatch } from "react-redux";
+import { calRealPrice } from "../ultils/ProductUtils";
+export const CartItem = ({ item, allChecked, setCarts, carts, index }) => {
   const [quantity, setQuantity] = useState(item.quantity);
-  const onCart = () => {};
-  const [check, setCheck] = useState(allChecked);
+  const dispatch = useDispatch();
   useEffect(() => {
-    setCheck(allChecked);
+    setQuantity(item.quantity);
+  }, [item]);
+  const [check, setCheck] = useState(item.isChecked);
+  useEffect(() => {
+    let temp = [...carts];
+    temp[index].isChecked =
+      allChecked === -1 ? item.isChecked : allChecked === 1;
+
+    setCarts(temp);
+    setCheck(item.isChecked);
   }, [allChecked]);
+  const onPress = (updateQuantity) => {
+    if (updateQuantity > 0 && updateQuantity <= 20) {
+      dispatch(
+        updateCart({
+          cartId: item._id,
+          quantity: updateQuantity,
+          resolve: (res) => {
+            if (res.status < 300) {
+              setQuantity(updateQuantity);
+            }
+          },
+        })
+      );
+    }
+  };
   return (
     <View style={styles.cartItem}>
       <CheckBox
         style={{ marginRight: 10 }}
         value={check}
-        onValueChange={() => {
+        onValueChange={(value) => {
+          let temp = [...carts];
+          temp[index].isChecked = value;
+
           setCheck(!check);
+          setCarts(temp);
         }}
         disabled={false}
         tintColors={{ true: "#ea4335", false: "#ea0000" }}
@@ -44,7 +74,7 @@ export const CartItem = ({ item, allChecked }) => {
         >
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.price}>
-              {`${item.unitPrice}`}
+              {`${calRealPrice(item.unitPrice, item.discountOff)}`}
               <Text
                 style={{
                   textDecorationLine: "underline",
@@ -78,10 +108,10 @@ export const CartItem = ({ item, allChecked }) => {
           )}
         </View>
         <View style={styles.controlButton}>
-          <VolunmButton
+          <VolunmButtonUpdate
             quantity={quantity}
-            setQuantity={setQuantity}
-          ></VolunmButton>
+            onPress={onPress}
+          ></VolunmButtonUpdate>
         </View>
         <View></View>
       </View>

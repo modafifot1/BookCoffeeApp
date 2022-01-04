@@ -5,9 +5,7 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  Text,
 } from "react-native";
-import CategoryListItem from "../components/CategoryListItem";
 import TopBar from "../components/TopBar";
 import TopBanner from "../assets/images/topBanner.jpg";
 import { vh } from "../ultils";
@@ -17,19 +15,25 @@ import ProductListItem from "../components/ProductListItem";
 import { Toast } from "../components/Toast";
 import { SwipeablePanel } from "rn-swipeable-panel";
 import { SwipperDetail } from "../components/SwipperDetail";
+import { useIsFocused } from "@react-navigation/native";
+import { LoadingPage } from "../components/LoadingPage";
 
 export default function ProductsScreen({ navigation }) {
+  const isFocused = useIsFocused();
+
   const [swipperActive, setSwipperActive] = useState(false);
-  const { products, loading, page, isLimited } = useSelector(
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { products, loading, isLimited, nextPage } = useSelector(
     (state) => state.product
   );
-  const [nextPage, setNextPage] = useState(1);
+  const { loading: loadingPage } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const childRef = useRef();
   const onCloseWipper = () => {
     setSwipperActive(false);
   };
-  const onClickCart = () => {
+  const onClickCart = (productId) => {
+    setSelectedProduct(products.data.find((item) => productId === item._id));
     setSwipperActive(true);
   };
   const onclickDetail = (productId) => {
@@ -46,17 +50,18 @@ export default function ProductsScreen({ navigation }) {
   };
   const onScrollEnd = (e) => {
     if (!loading && !isLimited) {
-      setNextPage(nextPage + 1);
+      dispatch(getProductsPerPage(nextPage));
     }
   };
   useEffect(() => {
-    dispatch(getProductsPerPage(nextPage));
-  }, [dispatch, nextPage]);
-  useEffect(() => {
-    if (page !== nextPage - 1) {
-      setNextPage(page + 1);
+    if (isFocused && nextPage > 1) {
+      dispatch(resetPage());
+      dispatch(getProductsPerPage(1));
     }
-  }, [page]);
+  }, [isFocused]);
+  useEffect(() => {
+    dispatch(getProductsPerPage(nextPage));
+  }, []);
   return (
     <View>
       <TopBar ref={childRef} />
@@ -99,8 +104,10 @@ export default function ProductsScreen({ navigation }) {
         <SwipperDetail
           navigation={navigation}
           onClose={onCloseWipper}
+          item={selectedProduct}
         ></SwipperDetail>
       </SwipeablePanel>
+      {loadingPage && <LoadingPage></LoadingPage>}
     </View>
   );
 }
@@ -118,5 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
     marginVertical: 10,
+    height: 270,
   },
 });

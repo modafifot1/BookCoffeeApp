@@ -49,6 +49,7 @@ const authSlice = createSlice({
     },
     setToken: (state, action) => {
       state.token = action.payload;
+      axiosClient.defaults.headers.authorization = `Bearer ${action.payload}`;
     },
     clearError: (state) => {
       state.error = "";

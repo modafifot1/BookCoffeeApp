@@ -42,9 +42,9 @@ const SaveButton = ({ label, onPress }) => {
   );
 };
 
-const DeleteButton = () => {
+const DeleteButton = ({ onPress }) => {
   return (
-    <TouchableOpacity style={{ marginTop: "auto" }}>
+    <TouchableOpacity style={{ marginTop: "auto" }} onPress={onPress}>
       <View style={styles.deleteButton}>
         <Ionicon
           name="trash"
@@ -79,7 +79,31 @@ const VolunmButton = ({ quantity, setQuantity }) => {
     </View>
   );
 };
-
+const VolunmButtonUpdate = ({ onPress, quantity }) => {
+  return (
+    <View style={styles.VolunmButtonContainer}>
+      <TouchableOpacity
+        style={styles.subButton}
+        onPress={() => onPress(quantity - 1)}
+      >
+        <IconAnt
+          name="minuscircle"
+          style={{ fontSize: 24, color: "#ea4335" }}
+        ></IconAnt>
+      </TouchableOpacity>
+      <Text style={{ marginHorizontal: 20 }}>{quantity}</Text>
+      <TouchableOpacity
+        style={styles.subButton}
+        onPress={() => onPress(quantity + 1)}
+      >
+        <IconAnt
+          name="pluscircle"
+          style={{ fontSize: 24, color: "#ea4335" }}
+        ></IconAnt>
+      </TouchableOpacity>
+    </View>
+  );
+};
 const SelectButton = ({ onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -175,6 +199,7 @@ const styles = StyleSheet.create({
 export {
   MyButton,
   VolunmButton,
+  VolunmButtonUpdate,
   AddButton,
   BuyButton,
   SaveButton,

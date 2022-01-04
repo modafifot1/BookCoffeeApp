@@ -14,87 +14,107 @@ import StarRating from "react-native-star-rating";
 import { vh } from "../ultils";
 import { AddButton, BuyButton, VolunmButton } from "../components/MyButton";
 import { Feedback } from "../components/Feedback";
-const product = {
-  confirmed: true,
-  _id: "60a5ecdd98cf780015b07baal",
-  typeId: 2,
-  name: "Soda bạc hà6",
-  unitPrice: 20001,
-  imageUrl:
-    "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-  discountOff: 5,
-  description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
-  discountMaximum: 5000,
-  createAt: "2021-05-20T05:00:13.401Z",
-  __v: 0,
-  numOfFeedbacks: 1,
-  numOfStars: 5,
-  quantity: 2,
-  feedbacks: [
-    {
-      _id: "60a63775ee375d0015b91b3d",
-      userId: "6076b2ecf8402efee33463c9",
-      userName: "Tiến Ngô Văn",
-      content: "Nước bổ dưỡng",
-      numOfStars: 5,
-      avataUrl:
-        "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-      createAt: "2021-05-20T10:18:29.902Z",
-      reply: [
-        {
-          _id: "61290c3f8d975c00168225b7",
-          userName: "Admin Do an CNPM",
-          content: "Cám ơn tiến đã ủng hộ!",
-          createAt: "2021-08-27T16:01:03.952Z",
-        },
-        {
-          _id: "61298a315b6609001683fafd",
-          userName: "Admin Do an CNPM",
-          content: "Cam on ban",
-          createAt: "2021-08-28T00:58:25.203Z",
-        },
-      ],
-    },
-    {
-      _id: "60a63775ee375d00sss15b91b3d",
-      userId: "6076b2ecf8402efee33463c9",
-      userName: "Tiến Ngô Văn",
-      content: "Nước bổ dưỡng",
-      numOfStars: 5,
-      avataUrl:
-        "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-      createAt: "2021-05-20T10:18:29.902Z",
-      reply: [
-        {
-          _id: "61290c3f8d975c00168225b7",
-          userName: "Admin Do an CNPM",
-          content: "Cám ơn tiến đã ủng hộ!",
-          createAt: "2021-08-27T16:01:03.952Z",
-        },
-        {
-          _id: "61298a315b6609001683fafd",
-          userName: "Admin Do an CNPM",
-          content: "Cam on ban",
-          createAt: "2021-08-28T00:58:25.203Z",
-        },
-      ],
-    },
-  ],
-};
+import { useDispatch, useSelector } from "react-redux";
+import { getProductById, resetDetailPage } from "../reducers/productSlice";
+import { LoadingPage } from "../components/LoadingPage";
+// const product = {
+//   confirmed: true,
+//   _id: "60a5ecdd98cf780015b07baal",
+//   typeId: 2,
+//   name: "Soda bạc hà6",
+//   unitPrice: 20001,
+//   imageUrl:
+//     "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+//   discountOff: 5,
+//   description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
+//   discountMaximum: 5000,
+//   createAt: "2021-05-20T05:00:13.401Z",
+//   __v: 0,
+//   numOfFeedbacks: 1,
+//   numOfStars: 5,
+//   quantity: 2,
+//   feedbacks: [
+//     {
+//       _id: "60a63775ee375d0015b91b3d",
+//       userId: "6076b2ecf8402efee33463c9",
+//       userName: "Tiến Ngô Văn",
+//       content: "Nước bổ dưỡng",
+//       numOfStars: 5,
+//       avataUrl:
+//         "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+//       createAt: "2021-05-20T10:18:29.902Z",
+//       reply: [
+//         {
+//           _id: "61290c3f8d975c00168225b7",
+//           userName: "Admin Do an CNPM",
+//           content: "Cám ơn tiến đã ủng hộ!",
+//           createAt: "2021-08-27T16:01:03.952Z",
+//         },
+//         {
+//           _id: "61298a315b6609001683fafd",
+//           userName: "Admin Do an CNPM",
+//           content: "Cam on ban",
+//           createAt: "2021-08-28T00:58:25.203Z",
+//         },
+//       ],
+//     },
+//     {
+//       _id: "60a63775ee375d00sss15b91b3d",
+//       userId: "6076b2ecf8402efee33463c9",
+//       userName: "Tiến Ngô Văn",
+//       content: "Nước bổ dưỡng",
+//       numOfStars: 5,
+//       avataUrl:
+//         "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+//       createAt: "2021-05-20T10:18:29.902Z",
+//       reply: [
+//         {
+//           _id: "61290c3f8d975c00168225b7",
+//           userName: "Admin Do an CNPM",
+//           content: "Cám ơn tiến đã ủng hộ!",
+//           createAt: "2021-08-27T16:01:03.952Z",
+//         },
+//         {
+//           _id: "61298a315b6609001683fafd",
+//           userName: "Admin Do an CNPM",
+//           content: "Cam on ban",
+//           createAt: "2021-08-28T00:58:25.203Z",
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 export const ProductDetailScreen = ({ route }) => {
-  console.log(route.params.productId);
+  const { product, loading } = useSelector((state) => state.product);
+
+  const [data, setData] = useState(null);
+  const dispatch = useDispatch();
+  const getProductByIdCallback = (res) => {
+    setData(res.food);
+  };
+  useEffect(() => {
+    dispatch(resetDetailPage());
+    dispatch(
+      getProductById({
+        productId: route.params.productId,
+        resolve: getProductByIdCallback,
+      })
+    );
+  }, [route.params.productId]);
   const [quantity, setQuantity] = useState(0);
   const onBuyNow = () => {
     navigation.navigate("CartStack");
   };
   const onCart = () => {};
-  return (
+  return loading || !data ? (
+    <LoadingPage></LoadingPage>
+  ) : (
     <ScrollView style={styles.productDetailContainer}>
       <View>
         <View style={{ alignItems: "center" }}>
           <Image
-            source={{ uri: product.imageUrl }}
+            source={{ uri: data.imageUrl }}
             style={{
               width: "100%",
               height: vh(40),
@@ -111,12 +131,12 @@ export const ProductDetailScreen = ({ route }) => {
                 fontWeight: "bold",
               }}
             >
-              {product.name}
+              {data.name}
             </Text>
-            {Number(product?.discountOff) > 0 && (
+            {Number(data?.discountOff) > 0 && (
               <View style={styles.discount}>
                 <Text style={{ color: "#ea4335", fontSize: 12 }}>
-                  {`-${product.discountOff} %`}
+                  {`-${data.discountOff} %`}
                 </Text>
               </View>
             )}
@@ -131,7 +151,7 @@ export const ProductDetailScreen = ({ route }) => {
           >
             <View style={styles.productDetailPrice}>
               <Text style={styles.price}>
-                {`${product.unitPrice}`}{" "}
+                {`${data.unitPrice}`}{" "}
                 <Text
                   style={{
                     textDecorationLine: "underline",
@@ -142,7 +162,7 @@ export const ProductDetailScreen = ({ route }) => {
                   đ
                 </Text>{" "}
               </Text>
-              {product?.discountOff > 0 && (
+              {data?.discountOff > 0 && (
                 <Text
                   style={{
                     textDecorationLine: "line-through",
@@ -152,25 +172,11 @@ export const ProductDetailScreen = ({ route }) => {
                     // marginLeft: 10,
                   }}
                 >
-                  {`${product.unitPrice}`}{" "}
+                  {`${data.unitPrice}`}{" "}
                   <Text style={{ textDecorationLine: "underline" }}>đ</Text>{" "}
                 </Text>
               )}
             </View>
-
-            {/* <View style={styles.starRating}>
-            <View style={styles.addToCartContainer}></View>
-            <StarRating
-              disabled={true}
-              maxStars={5}
-              rating={product.numOfStars || 0}
-              fullStarColor={"#e0dc00"}
-              starSize={18}
-              containerStyle={{
-                width: "60%",
-              }}
-            ></StarRating>
-          </View> */}
             <View style={styles.controlButton}>
               <VolunmButton
                 quantity={quantity}
@@ -184,22 +190,22 @@ export const ProductDetailScreen = ({ route }) => {
       </View>
       <View style={styles.feedback}>
         <View style={styles.topFeedback}>
-          <Text>{`Đánh giá & nhận xét (${product.numOfFeedbacks})`}</Text>
+          <Text>{`Đánh giá & nhận xét (${product.numOfFeedbacks || 0})`}</Text>
           <View style={{ flexDirection: "row", marginVertical: 10 }}>
             <StarRating
               disabled={true}
               maxStars={5}
-              rating={product.numOfStars || 0}
+              rating={data.numOfStars || 0}
               fullStarColor={"#e0dc00"}
               starSize={18}
               starStyle={{ marginLeft: 5 }}
             ></StarRating>
             <View style={{ marginLeft: 10 }}>
-              <Text>{`${product.numOfStars}/5 sao`}</Text>
+              <Text>{`${data.numOfStars || 0}/5 sao`}</Text>
             </View>
           </View>
         </View>
-        {product.feedbacks.map((item) => (
+        {data.feedbacks?.map((item) => (
           <Feedback feedback={item} key={item._id}></Feedback>
         ))}
       </View>
@@ -209,11 +215,6 @@ export const ProductDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   productDetailContainer: {},
   productDetailPrice: {
-    // flexDirection: "row",
-    // alignItems: "center",
-    // marginTop: 10,
-    // justifyContent: "space-between",
-    // paddingHorizontal: 10,
     alignSelf: "baseline",
   },
   productDetailName: {

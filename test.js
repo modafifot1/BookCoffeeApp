@@ -47,4 +47,3 @@ const convert2HistoryTime = (time) => {
 
 const now = Date.now();
 const date = new Date(feedback.createAt);
-console.log(convert2HistoryTime(feedback.createAt));

@@ -7,14 +7,14 @@ const initialState = {
   products: {
     status: null,
     msg: "",
-    data:[]
+    data: [],
   },
   product: {
     status: null,
     msg: "",
-    data:{}
+    data: {},
   },
-  page: 0,
+  nextPage: 1,
   isLimited: false,
 };
 
@@ -23,9 +23,6 @@ export const getProductsPerPage = createAsyncThunk(
   async (page, { rejectWithValue, dispatch }) => {
     try {
       const token = await getData("token");
-      console.log("Axios Token: ", token);
-      axiosClient.defaults.headers.authorization = `Bearer ${token}`;
-
       const res = await productApi.getProductsPerPage(page);
       return res;
     } catch (error) {
@@ -35,9 +32,10 @@ export const getProductsPerPage = createAsyncThunk(
 );
 export const getProductById = createAsyncThunk(
   "productDetail",
-  async (productId, { rejectWithValue, dispatch }) => {
+  async ({ productId, resolve }, { rejectWithValue, dispatch }) => {
     try {
       const res = await productApi.getProductById(productId);
+      resolve(res);
       return res;
     } catch (error) {
       rejectWithValue(error.response.data);
@@ -49,7 +47,12 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     resetPage(state, action) {
-      state.page = 0;
+      state.isLimited = false;
+      state.nextPage = 1;
+      state.products.data = [];
+    },
+    resetDetailPage(state, action) {
+      state.product.data = {};
     },
   },
   extraReducers: {
@@ -62,7 +65,7 @@ const productSlice = createSlice({
       if (action.payload.foods.length == 0) {
         state.isLimited = true;
       } else {
-        state.page = state.page + 1;
+        state.nextPage = state.nextPage + 1;
         if (state.page == 1) {
           state.products.data = action.payload.foods;
         } else {
@@ -80,12 +83,12 @@ const productSlice = createSlice({
     },
     [getProductById.pending](state) {
       state.loading = true;
-      state.products.status = null;
-      state.products.msg = "";
+      state.product.status = null;
+      state.product.msg = "";
     },
     [getProductById.fulfilled](state, action) {
       state.loading = false;
-      state.product.data = action.payload;
+      state.product.data = action.payload.food;
       state.product.status = action.payload.status;
       state.product.msg = action.payload.msg;
     },
@@ -98,6 +101,6 @@ const productSlice = createSlice({
 });
 
 const { reducer: productReducer, actions } = productSlice;
-export const { resetPage } = actions;
+export const { resetPage, resetDetailPage } = actions;
 
 export default productReducer;

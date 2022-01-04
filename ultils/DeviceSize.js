@@ -8,4 +8,5 @@ const vh = (percent) => {
 const vw = (percent) => {
   return (windowWidth * percent) / 100;
 };
+
 export { vh, vw };
