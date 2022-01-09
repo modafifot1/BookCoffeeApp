@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { calRealPrice } from "../ultils/ProductUtils";
 
 export const SelectedCartItem = ({ item, SubComponent }) => {
   return (
@@ -51,7 +52,7 @@ export const SelectedCartItem = ({ item, SubComponent }) => {
           >
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.price}>
-                {`${item.unitPrice}`}
+                {`${calRealPrice(item.unitPrice, item.discountOff)}`}
                 <Text
                   style={{
                     textDecorationLine: "underline",
@@ -106,7 +107,7 @@ export const SelectedCartItem = ({ item, SubComponent }) => {
             color: "#e83e52",
           }}
         >
-          {`${item.unitPrice}`}
+          {`${calRealPrice(item.unitPrice, item.discountOff) * item.quantity}`}
           <Text
             style={{
               textDecorationLine: "underline",

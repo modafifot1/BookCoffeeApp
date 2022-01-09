@@ -17,8 +17,16 @@ import { getCartItems, deleteCartItems } from "../reducers/cartsSlice";
 import { useIsFocused, CommonActions } from "@react-navigation/native";
 import { Loading } from "../components/LoadingMore";
 import { calTotalPrice } from "../ultils/ProductUtils";
+import { Toast } from "../components/Toast";
+import { order } from "../reducers/orderSlice";
 
 export default function CartsScreen({ navigation, route }) {
+  const [toastContent, setToastContent] = useState({
+    title: "",
+    messsage: "",
+    isError: false,
+  });
+  const [tableCode, setTableCode] = useState(null);
   const checkedId = route.params?.selectedItemId;
   const { numOfItems, loading, updateLoading } = useSelector(
     (state) => state.cart
@@ -31,6 +39,7 @@ export default function CartsScreen({ navigation, route }) {
     if (isFocused) {
       navigation.dispatch(CommonActions.setParams({ selectedItemId: "" }));
       setAllChecked(-1);
+      setTableCode(null);
       dispatch(
         getCartItems((res) => {
           setCarts(
@@ -49,7 +58,46 @@ export default function CartsScreen({ navigation, route }) {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [allChecked, setAllChecked] = useState(-1);
   const onBuy = () => {
-    navigation.navigate("Selectedcarts");
+    const selectedCarts = carts.filter((item) => item.isChecked);
+    const cartItems = selectedCarts.map((item) => item._id);
+    console.log("selectedcart: ", cartItems);
+    if (!selectedCarts) {
+      setToastContent({
+        title: "Lỗi",
+        message: "Vui lòng chọn sản phẩm",
+        isError: true,
+      });
+      return;
+    }
+    if (!tableCode) {
+      setToastContent({
+        title: "Lỗi",
+        messsage: "Vui lòng chọn bàn!",
+        isError: true,
+      });
+      return;
+    }
+    dispatch(
+      order({
+        cartItems,
+        tableCode,
+        resolve: (res) => {
+          if (res.status < 300) {
+            navigation.navigate("Selectedcarts", {
+              selectedCarts,
+              tableCode,
+              total: res.total,
+            });
+          } else {
+            setToastContent({
+              title: "Lỗi",
+              messsage: res.msg,
+              isError: true,
+            });
+          }
+        },
+      })
+    );
   };
   const onDelete = () => {
     const cartItems = carts.reduce((pre, cur) => {
@@ -71,6 +119,13 @@ export default function CartsScreen({ navigation, route }) {
   };
   return (
     <View style={styles.cartContainer}>
+      {
+        <Toast
+          title={toastContent.title}
+          message={toastContent.messsage}
+          isError={toastContent.isError}
+        ></Toast>
+      }
       <View style={styles.header}>
         <Text
           style={{
@@ -121,14 +176,20 @@ export default function CartsScreen({ navigation, route }) {
             ListFooterComponentStyle={{ paddingHorizontal: 20 }}
           ></FlatList>
           <View style={styles.footer}>
-            <View style={{ flexDirection: "row" }}>
-              <Text>Tổng cộng: </Text>
-              <Text style={styles.price}>
-                {`${calTotalPrice(carts)}`}{" "}
-                <Text style={{ textDecorationLine: "underline" }}>đ</Text>{" "}
-              </Text>
+            <View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ fontWeight: "bold" }}>{`Bàn: `}</Text>
+                <Text>{tableCode || "chưa chọn"}</Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ fontWeight: "bold" }}>Tổng cộng: </Text>
+                <Text style={styles.price}>
+                  {`${calTotalPrice(carts)}`}{" "}
+                  <Text style={{ textDecorationLine: "underline" }}>đ</Text>{" "}
+                </Text>
+              </View>
             </View>
-            <BuyButton label="Thanh toán" onPress={onBuy}></BuyButton>
+            <BuyButton label="Đặt hàng" onPress={onBuy}></BuyButton>
           </View>
         </View>
       )}
@@ -139,7 +200,10 @@ export default function CartsScreen({ navigation, route }) {
         animationType={"fade"}
         titleStyle={{ textAlign: "center", fontWeight: "bold" }}
       >
-        <SelectTable></SelectTable>
+        <SelectTable
+          setTableCode={setTableCode}
+          tableCode={tableCode}
+        ></SelectTable>
       </Dialog>
       {updateLoading && <LoadingPage></LoadingPage>}
     </View>
@@ -180,6 +244,6 @@ const styles = StyleSheet.create({
   },
   price: {
     color: "#e83e52",
-    fontSize: 18,
+    fontSize: 16,
   },
 });

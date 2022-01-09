@@ -26,6 +26,7 @@ export const getProductsPerPage = createAsyncThunk(
       const res = await productApi.getProductsPerPage(page);
       return res;
     } catch (error) {
+      console.log("Error: ", error.response.data);
       return rejectWithValue(error.response.data);
     }
   }

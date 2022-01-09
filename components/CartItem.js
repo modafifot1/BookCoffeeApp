@@ -159,4 +159,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
+  price: {
+    alignSelf: "baseline",
+    paddingHorizontal: 5,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: "#e83e52",
+    color: "#e83e52",
+  },
 });
