@@ -112,8 +112,10 @@ import {
 import { TabView, SceneMap } from "react-native-tab-view";
 import { vw } from "../ultils";
 import { OrderItem } from "./OrderItem";
+let a = 1;
+const FirstRoute = (navigation, status) => {
+  console.log("vo", status);
 
-const FirstRoute = (navigation) => {
   return (
     <FlatList
       data={orders}
@@ -182,10 +184,10 @@ export default class TabViewExample extends React.Component {
   };
 
   _renderScene = SceneMap({
-    "-1": () => FirstRoute(this.navigation),
-    0: SecondRoute,
-    1: FirstRoute,
-    2: SecondRoute,
+    "-1": () => FirstRoute(this.navigation, -1),
+    0: () => FirstRoute(this.navigation, 0),
+    1: () => FirstRoute(this.navigation, 1),
+    2: () => FirstRoute(this.navigation, 2),
   });
 
   render() {

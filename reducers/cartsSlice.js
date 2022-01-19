@@ -19,7 +19,7 @@ export const addCartItem = createAsyncThunk(
       return res;
     } catch (error) {
       resovle(error.response.data);
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -33,7 +33,7 @@ export const getCartItems = createAsyncThunk(
     } catch (error) {
       resolve(error.response.data);
 
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -47,7 +47,7 @@ export const updateCart = createAsyncThunk(
       return res;
     } catch (error) {
       resolve(error.response.data);
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -60,7 +60,7 @@ export const deleteCartItems = createAsyncThunk(
       return res;
     } catch (error) {
       resolve(error.response.data);
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

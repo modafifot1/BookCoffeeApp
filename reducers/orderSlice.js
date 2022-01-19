@@ -6,6 +6,7 @@ const initialState = {
   status: null,
   msg: "",
   orders: [],
+  newOrder: {},
 };
 
 export const order = createAsyncThunk(
@@ -18,11 +19,64 @@ export const order = createAsyncThunk(
       return res;
     } catch (error) {
       resolve(error.response.data);
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
+export const purchase = createAsyncThunk(
+  "orders/purchase",
+  async (
+    { cartItems, tableCode, total, paymentMethod, resolve },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const res = await orderApi.purchase(
+        cartItems,
+        tableCode,
+        total,
+        paymentMethod
+      );
+      resolve(res);
+      return res;
+    } catch (error) {
+      resolve(error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const paymentMomo = createAsyncThunk(
+  "/orders/payment-momo",
+  async (data, { rejectWithValue, dispatch }) => {
+    try {
+      return await orderApi.paymentMomo(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const getOrdersByStatus = createAsyncThunk(
+  "/orders/getByStatus",
+  async (status, { rejectWithValue, dispatch }) => {
+    try {
+      return await orderApi.getOrdersByStatus(status);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const getOrderById = createAsyncThunk(
+  "/orders/getById",
+  async ({ orderId, resolve }, { rejectWithValue, dispatch }) => {
+    try {
+      const res = await orderApi.getOrderById(orderId);
+      resolve(res);
+    } catch (error) {
+      resolve(error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 const orderSlice = createSlice({
   name: "orders",
   initialState,
@@ -41,6 +95,55 @@ const orderSlice = createSlice({
       state.loading = false;
       state.msg = action.payload.msg;
       state.status = action.payload.status;
+    },
+    [purchase.pending](state, action) {
+      state.loading = true;
+      state.msg = "";
+      state.status = null;
+      state.newOrder = {};
+    },
+    [purchase.fulfilled](state, action) {
+      state.loading = false;
+      state.msg = action.payload.msg;
+      state.status = action.payload.status;
+      state.newOrder = { ...action.payload };
+    },
+    [purchase.rejected](state, action) {
+      state.loading = false;
+      state.msg = action.payload.msg;
+      state.status = action.payload.status;
+      state.newOrder = {};
+    },
+    [getOrdersByStatus.pending](state, action) {
+      state.loading = true;
+      state.status = null;
+      state.msg = "";
+    },
+    [getOrdersByStatus.fulfilled](state, action) {
+      state.loading = false;
+      state.msg = action.payload.msg;
+      state.status = action.payload.status;
+      state.orders = action.payload.oreders;
+    },
+    [getOrdersByStatus.rejected](state, action) {
+      state.loading = false;
+      state.status = null;
+      state.msg = "";
+    },
+    [getOrderById.pending](state, action) {
+      state.loading = true;
+      state.status = null;
+      state.msg = "";
+    },
+    [getOrderById.fulfilled](state, action) {
+      state.loading = false;
+      state.msg = action.payload.msg;
+      state.status = action.payload.status;
+    },
+    [getOrderById.rejected](state, action) {
+      state.loading = false;
+      state.status = null;
+      state.msg = "";
     },
   },
 });

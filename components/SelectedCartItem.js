@@ -107,7 +107,7 @@ export const SelectedCartItem = ({ item, SubComponent }) => {
             color: "#e83e52",
           }}
         >
-          {`${calRealPrice(item.unitPrice, item.discountOff) * item.quantity}`}
+          {`${calRealPrice(item.unitPrice * item.quantity, item.discountOff)}`}
           <Text
             style={{
               textDecorationLine: "underline",

@@ -13,6 +13,7 @@ import {
   SelectedcartsScreen,
   ProductDetailScreen,
   OrderDetailScreen,
+  OrderResultScreen,
 } from "./screens";
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./ultils";
@@ -20,6 +21,7 @@ import { setToken } from "./reducers/authSlice";
 import { getCartItems } from "./reducers/cartsSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native";
+
 const HomeStack = createNativeStackNavigator();
 const HomeStackScreen = () => {
   return (
@@ -40,11 +42,18 @@ const HomeStackScreen = () => {
 const CartStack = createNativeStackNavigator();
 const CartStackScreen = () => {
   return (
-    <CartStack.Navigator screenOptions={{ headerShown: false }}>
+    <CartStack.Navigator
+      screenOptions={{ headerShown: false }}
+      // initialRouteName="OrderResult"
+    >
       <CartStack.Screen name="Cart" component={CartsScreen}></CartStack.Screen>
       <CartStack.Screen
         name="Selectedcarts"
         component={SelectedcartsScreen}
+      ></CartStack.Screen>
+      <CartStack.Screen
+        name="OrderResult"
+        component={OrderResultScreen}
       ></CartStack.Screen>
     </CartStack.Navigator>
   );
@@ -88,10 +97,7 @@ export default function AppNavigator() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (token) {
-      dispatch(
-        getCartItems((res) => {
-        })
-      );
+      dispatch(getCartItems((res) => {}));
     }
   }, [token]);
   useEffect(() => {

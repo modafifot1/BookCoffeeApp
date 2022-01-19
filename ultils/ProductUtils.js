@@ -4,6 +4,7 @@ export const calRealPrice = (unitPrice, discountOff) =>
   )
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ";
+
 export const calTotalPrice = (carts) => {
   return (
     Math.round(

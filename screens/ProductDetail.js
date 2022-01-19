@@ -17,6 +17,7 @@ import { Feedback } from "../components/Feedback";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductById, resetDetailPage } from "../reducers/productSlice";
 import { LoadingPage } from "../components/LoadingPage";
+import { addCartItem } from "../reducers/cartsSlice";
 // const product = {
 //   confirmed: true,
 //   _id: "60a5ecdd98cf780015b07baal",
@@ -85,7 +86,7 @@ import { LoadingPage } from "../components/LoadingPage";
 //   ],
 // };
 
-export const ProductDetailScreen = ({ route }) => {
+export const ProductDetailScreen = ({ route, navigation }) => {
   const { product, loading } = useSelector((state) => state.product);
 
   const [data, setData] = useState(null);
@@ -93,6 +94,7 @@ export const ProductDetailScreen = ({ route }) => {
   const getProductByIdCallback = (res) => {
     setData(res.food);
   };
+
   useEffect(() => {
     dispatch(resetDetailPage());
     dispatch(
@@ -103,10 +105,31 @@ export const ProductDetailScreen = ({ route }) => {
     );
   }, [route.params.productId]);
   const [quantity, setQuantity] = useState(0);
-  const onBuyNow = () => {
-    navigation.navigate("CartStack");
+  const onCart = () => {
+    dispatch(
+      addCartItem({
+        cartItems: { [route.params.productId]: quantity },
+        resovle: () => {},
+      })
+    );
   };
-  const onCart = () => {};
+  const onBuyNow = () => {
+    if (quantity) {
+      dispatch(
+        addCartItem({
+          cartItems: { [route.params.productId]: quantity },
+          resovle: (res) => {
+            if (res.status < 300) {
+              navigation.navigate("CartStack", {
+                screen: "Cart",
+                params: { selectedItemId: route.params.productId },
+              });
+            }
+          },
+        })
+      );
+    }
+  };
   return loading || !data ? (
     <LoadingPage></LoadingPage>
   ) : (
@@ -185,7 +208,7 @@ export const ProductDetailScreen = ({ route }) => {
               <AddButton onPress={onCart}></AddButton>
             </View>
           </View>
-          <BuyButton label={"Mua ngay"}></BuyButton>
+          <BuyButton label={"Mua ngay"} onPress={onBuyNow}></BuyButton>
         </View>
       </View>
       <View style={styles.feedback}>

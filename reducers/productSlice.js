@@ -39,7 +39,8 @@ export const getProductById = createAsyncThunk(
       resolve(res);
       return res;
     } catch (error) {
-      rejectWithValue(error.response.data);
+      resolve(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

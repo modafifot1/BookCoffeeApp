@@ -8,6 +8,7 @@ import CategoryScreen from "./categoryScreen";
 import { SelectedcartsScreen } from "./Selectedcarts";
 import { ProductDetailScreen } from "./ProductDetail";
 import { OrderDetailScreen } from "./OrderDetail";
+import { OrderResultScreen } from "./OrderResult";
 export {
   ProductsScreen,
   CartsScreen,
@@ -19,4 +20,5 @@ export {
   SelectedcartsScreen,
   ProductDetailScreen,
   OrderDetailScreen,
+  OrderResultScreen,
 };

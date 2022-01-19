@@ -14,7 +14,11 @@ import { SelectTable } from "../components/SelectTable";
 import { LoadingPage } from "../components/LoadingPage";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartItems, deleteCartItems } from "../reducers/cartsSlice";
-import { useIsFocused, CommonActions } from "@react-navigation/native";
+import {
+  useIsFocused,
+  CommonActions,
+  CommonNavigationAction,
+} from "@react-navigation/native";
 import { Loading } from "../components/LoadingMore";
 import { calTotalPrice } from "../ultils/ProductUtils";
 import { Toast } from "../components/Toast";
@@ -172,7 +176,7 @@ export default function CartsScreen({ navigation, route }) {
               ></CartItem>
             )}
             keyExtractor={(item) => `${item._id}`}
-            style={{ height: "76%" }}
+            style={{ height: "75%" }}
             ListFooterComponentStyle={{ paddingHorizontal: 20 }}
           ></FlatList>
           <View style={styles.footer}>

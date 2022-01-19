@@ -16,7 +16,7 @@ export const getListTable = createAsyncThunk(
       resovle(res);
       return res;
     } catch (error) {
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );
