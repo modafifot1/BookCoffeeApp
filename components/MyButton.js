@@ -22,6 +22,16 @@ const AddButton = ({ label, onPress }) => {
     </TouchableOpacity>
   );
 };
+const BorrowButton = ({ label, onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Ionicons
+        name="bookmarks"
+        style={{ fontSize: 28, color: "#ea4335" }}
+      ></Ionicons>
+    </TouchableOpacity>
+  );
+};
 const BuyButton = ({ label, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
@@ -205,4 +215,5 @@ export {
   SaveButton,
   DeleteButton,
   SelectButton,
+  BorrowButton,
 };

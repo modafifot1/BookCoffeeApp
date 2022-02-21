@@ -1,21 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { cartApi } from "../apis/cartApi";
+import { borrowedBookCartApi } from "../apis/borrowedBookCartApi";
 
 const initialState = {
   loading: true,
   status: null,
   msg: "",
-  cartItems: [],
+  borrowedBookCartItems: [],
   numOfItems: 0,
   updateLoading: false,
 };
 
 export const addCartItem = createAsyncThunk(
-  "add/cart",
-  async ({ cartItems, resovle }, { rejectWithValue, dispatch }) => {
+  "add/borrowedBookCart",
+  async ({ bookCartItems, resovle }, { rejectWithValue, dispatch }) => {
     try {
-      console.log();
-      const res = await cartApi.addItem({ cartItems });
+      const res = await borrowedBookCartApi.addItem({ bookCartItems });
       resovle(res);
       return res;
     } catch (error) {
@@ -25,27 +24,30 @@ export const addCartItem = createAsyncThunk(
   }
 );
 export const getCartItems = createAsyncThunk(
-  "get/carts",
+  "get/borrowedBookCarts",
   async (resolve, { rejectWithValue, dispatch }) => {
     try {
-      const res = await cartApi.getCartItems();
+      const res = await borrowedBookCartApi.getCartItems();
       resolve(res);
       return res;
     } catch (error) {
-      console.log(error);
-
       resolve(error.response.data);
-
       return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const updateCart = createAsyncThunk(
-  "update/cart",
-  async ({ cartId, quantity, resolve }, { rejectWithValue, dispatch }) => {
+  "update/borrowedBookCart",
+  async (
+    { borrowedBookCartId, quantity, resolve },
+    { rejectWithValue, dispatch }
+  ) => {
     try {
-      const res = await cartApi.updateCartItem(cartId, quantity);
+      const res = await borrowedBookCartApi.updateCartItem(
+        borrowedBookCartId,
+        quantity
+      );
       resolve(res);
       return res;
     } catch (error) {
@@ -55,20 +57,23 @@ export const updateCart = createAsyncThunk(
   }
 );
 export const deleteCartItems = createAsyncThunk(
-  "delete/carts",
-  async ({ cartItems, resolve }, { rejectWithValue, dispatch }) => {
+  "delete/borrowedBookCarts",
+  async ({ borrowedBookCartItems, resolve }, { rejectWithValue, dispatch }) => {
     try {
-      const res = await cartApi.deleteCartItem(cartItems);
+      const res = await borrowedBookCartApi.deleteCartItem(
+        borrowedBookCartItems
+      );
       resolve(res);
       return res;
     } catch (error) {
+      console.log(error);
       resolve(error.response.data);
       return rejectWithValue(error.response.data);
     }
   }
 );
-const cartSlice = createSlice({
-  name: "cart",
+const borrowedBookCartSlice = createSlice({
+  name: "borrowedBookCart",
   initialState,
   extraReducers: {
     [addCartItem.pending](state, action) {
@@ -91,12 +96,15 @@ const cartSlice = createSlice({
       state.loading = true;
       state.msg = "";
       state.status = null;
+      console.log("Vo1");
     },
     [getCartItems.fulfilled](state, action) {
-      state.cartItems = action.payload.cartItems;
+      state.borrowedBookCartItems = action.payload.borrowedBookCartItems;
       state.numOfItems = action.payload.numOfAddedItems;
       state.loading = false;
+
       state.status = action.payload.status;
+
       state.msg = action.payload.msg;
     },
     [getCartItems.rejected](state, action) {
@@ -128,8 +136,8 @@ const cartSlice = createSlice({
       state.updateLoading = false;
       state.status = action.payload.status;
       state.msg = action.payload.msg;
-      state.cartItems = state.cartItems.filter(
-        (item) => !action.payload.cartItems.includes(item._id)
+      state.borrowedBookCartItems = state.borrowedBookCartItems.filter(
+        (item) => !action.payload.borrowedBookCartItems.includes(item._id)
       );
     },
     [deleteCartItems.rejected](state, action) {
@@ -140,5 +148,5 @@ const cartSlice = createSlice({
   },
 });
 
-const { reducer: cartReducer } = cartSlice;
-export default cartReducer;
+const { reducer: borrowedBookCartReducer } = borrowedBookCartSlice;
+export default borrowedBookCartReducer;

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
@@ -14,13 +18,19 @@ import {
   ProductDetailScreen,
   OrderDetailScreen,
   OrderResultScreen,
+  BooksScreen,
+  BookDetailScreen,
+  BookCartsScreen,
 } from "./screens";
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./ultils";
 import { setToken } from "./reducers/authSlice";
 import { getCartItems } from "./reducers/cartsSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native";
+import { TopOrderStackScreen } from "./components/TopTab";
+import IonIcons from "react-native-vector-icons/Ionicons";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { vw } from "./ultils";
 
 const HomeStack = createNativeStackNavigator();
 const HomeStackScreen = () => {
@@ -60,17 +70,41 @@ const CartStackScreen = () => {
 };
 
 const OrderStack = createNativeStackNavigator();
+
+const headerComponent = () => {
+  return (
+    <View style={styles.header}>
+      <Text
+        style={{
+          marginTop: "auto",
+          marginLeft: 20,
+          fontWeight: "bold",
+        }}
+      >
+        Quản lý đơn hàng
+      </Text>
+    </View>
+  );
+};
 const OrderStackScreen = () => {
   return (
-    <OrderStack.Navigator screenOptions={{ headerShown: false }}>
+    <OrderStack.Navigator>
       <OrderStack.Screen
         name="Order"
-        component={OrdersScreen}
-        options={{ title: "Orders" }}
+        component={TopOrderStackScreen}
+        options={{
+          // title: "Quản lý đơn hàng",
+          // headerTitleStyle: { fontSize: 16 },
+          // headerStyle: { backgroundColor: "yellow" },
+          headerTitle: headerComponent,
+        }}
       ></OrderStack.Screen>
       <OrderStack.Screen
         name="OrderDetail"
         component={OrderDetailScreen}
+        options={{
+          headerShown: false,
+        }}
       ></OrderStack.Screen>
     </OrderStack.Navigator>
   );
@@ -87,7 +121,22 @@ const MyProfileStackScreen = () => {
     </MyProfileStack.Navigator>
   );
 };
-
+const BookStack = createNativeStackNavigator();
+const BookStackScreen = () => {
+  return (
+    <BookStack.Navigator screenOptions={{ headerShown: false }}>
+      <BookStack.Screen name="Book" component={BooksScreen}></BookStack.Screen>
+      <BookStack.Screen
+        name="BookDetail"
+        component={BookDetailScreen}
+      ></BookStack.Screen>
+      <BookStack.Screen
+        name="BookCart"
+        component={BookCartsScreen}
+      ></BookStack.Screen>
+    </BookStack.Navigator>
+  );
+};
 const LoginStack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
@@ -143,6 +192,9 @@ export default function AppNavigator() {
                   iconName = focused
                     ? "person-circle"
                     : "person-circle-outline";
+                  break;
+                case "BookStack":
+                  iconName = focused ? "book" : "book-outline";
               }
               return <Ionicons name={iconName} size={24} color={color} />;
             },
@@ -166,6 +218,7 @@ export default function AppNavigator() {
             name="OrderStack"
             component={OrderStackScreen}
           ></Tab.Screen>
+          <Tab.Screen name="BookStack" component={BookStackScreen}></Tab.Screen>
           <Tab.Screen
             name="MyProfileStack"
             component={MyProfileStackScreen}
@@ -175,3 +228,14 @@ export default function AppNavigator() {
     </NavigationContainer>
   );
 }
+const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    // paddingHorizontal: 20,
+    height: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    width: vw(100),
+    marginLeft: -20,
+  },
+});

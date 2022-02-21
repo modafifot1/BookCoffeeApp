@@ -19,7 +19,6 @@ export const login = createAsyncThunk(
       axiosClient.defaults.headers.authorization = `Bearer ${token}`;
       return res;
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.response.data);
     }
   }

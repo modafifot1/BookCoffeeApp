@@ -19,6 +19,7 @@ import RadioGroup from "react-native-radio-buttons-group";
 import { purchase, paymentMomo } from "../reducers/orderSlice";
 import RNMomosdk from "react-native-momosdk";
 import { useDispatch, useSelector } from "react-redux";
+import { LoadingPage } from "../components/LoadingPage";
 const RNMomosdkModule = NativeModules.RNMomosdk;
 const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
 
@@ -55,6 +56,7 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   const onBack = () => {
     navigation.goBack();
   };
+  const { loading } = useSelector((state) => state.order);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const radioData = [
     {
@@ -81,7 +83,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
     "RCTMoMoNoficationCenterRequestTokenReceived",
     (response) => {
       try {
-        console.log("<MoMoPay>Listen.Event::" + JSON.stringify(response));
         if (response && response.status == 0) {
           //SUCCESS: continue to submit momoToken,phonenumber to server
           fromapp = response.fromapp; //ALWAYS:: fromapp==momotransfer
@@ -102,7 +103,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   EventEmitter.addListener(
     "RCTMoMoNoficationCenterRequestTokenState",
     (response) => {
-      console.log("<MoMoPay>Listen.RequestTokenState:: " + response);
       // status = 1: Parameters valid & ready to open MoMo app.
       // status = 2: canOpenURL failed for URL MoMo app
       // status = 3: Parameters invalid
@@ -110,8 +110,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   );
 
   const onBuy = async () => {
-    console.log("PaymentMethod: ", paymentMethod);
-
     const ids = orderItems.map((item) => item._id);
     dispatch(
       purchase({
@@ -150,7 +148,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
 
     let dataPayment = await RNMomosdk.requestPayment(jsonData);
     momoHandleResponse(dataPayment);
-    console.log("onPress End");
   };
   const momoHandleResponse = async (response) => {
     try {
@@ -162,7 +159,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
         let phonenumber = response.phonenumber;
         let message = response.message;
         let partnerRefId = response.orderId;
-        console.log("MOMO token: ", momoToken, response);
         if (message === "Successful") {
           const data = {
             partnerCode: merchantcode,
@@ -177,7 +173,6 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
           dispatch(paymentMomo(data));
           isPaid = true;
         }
-        console.log("isPaid: ", isPaid);
       }
       navigation.navigate("OrderResult", {
         orderItems,
@@ -192,6 +187,7 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   };
   return (
     <View style={styles.orderContainer}>
+      {loading && <LoadingPage></LoadingPage>}
       <View style={styles.header}>
         <TouchableOpacity style={{ marginTop: "auto" }} onPress={onBack}>
           <IonIcons name="chevron-back" style={{ fontSize: 18 }}></IonIcons>

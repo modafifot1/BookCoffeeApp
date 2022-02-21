@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, FlatList, Text } from "react-native";
-import { CartItem } from "../components/CartItem";
+// import { CartItem } from "../components/CartItem";
+import { BookCartItem } from "../components/BookCartItem";
 import { vh, vw } from "../ultils";
 import CheckBox from "@react-native-community/checkbox";
 import {
@@ -13,18 +14,21 @@ import { Dialog } from "react-native-simple-dialogs";
 import { SelectTable } from "../components/SelectTable";
 import { LoadingPage } from "../components/LoadingPage";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartItems, deleteCartItems } from "../reducers/cartsSlice";
+import {
+  getCartItems,
+  deleteCartItems,
+} from "../reducers/borrowedBookCartSlice";
 import {
   useIsFocused,
   CommonActions,
   CommonNavigationAction,
 } from "@react-navigation/native";
 import { Loading } from "../components/LoadingMore";
-import { calTotalPrice } from "../ultils/ProductUtils";
+import { calTotalBook } from "../ultils/ProductUtils";
 import { Toast } from "../components/Toast";
 import { order } from "../reducers/orderSlice";
 
-export default function CartsScreen({ navigation, route }) {
+export const BookCartsScreen = ({ navigation, route }) => {
   const [toastContent, setToastContent] = useState({
     title: "",
     messsage: "",
@@ -33,7 +37,7 @@ export default function CartsScreen({ navigation, route }) {
   const [tableCode, setTableCode] = useState(null);
   const checkedId = route.params?.selectedItemId;
   const { numOfItems, loading, updateLoading } = useSelector(
-    (state) => state.cart
+    (state) => state.borrowedBookCart
   );
   const { loading: orderLoading } = useSelector((state) => state.order);
   const isFocused = useIsFocused();
@@ -48,8 +52,8 @@ export default function CartsScreen({ navigation, route }) {
       dispatch(
         getCartItems((res) => {
           setCarts(
-            res.cartItems.map((item) => {
-              const isChecked = checkedId === item?.foodId;
+            res.borrowedBookCartItems.map((item) => {
+              const isChecked = checkedId === item.bookId;
               return {
                 ...item,
                 isChecked,
@@ -104,23 +108,27 @@ export default function CartsScreen({ navigation, route }) {
     );
   };
   const onDelete = () => {
-    const cartItems = carts.reduce((pre, cur) => {
+    const borrowedBookCartItems = carts.reduce((pre, cur) => {
       if (cur.isChecked) {
         pre.push(cur._id);
       }
       return pre;
     }, []);
+    if (borrowedBookCartItems.length === 0) return;
     dispatch(
       deleteCartItems({
-        cartItems: { cartItems },
+        borrowedBookCartItems: { borrowedBookCartItems },
         resolve: (res) => {
           setCarts([
-            ...carts.filter((item) => !res.cartItems?.includes(item._id)),
+            ...carts.filter(
+              (item) => !res.borrowedBookCartItems?.includes(item._id)
+            ),
           ]);
         },
       })
     );
   };
+
   return (
     <View style={styles.cartContainer}>
       {orderLoading && <LoadingPage></LoadingPage>}
@@ -140,7 +148,7 @@ export default function CartsScreen({ navigation, route }) {
             marginTop: "auto",
           }}
         >
-          {`Giỏ hàng (${numOfItems})`}
+          {`Giỏ sách (${numOfItems})`}
         </Text>
         <DeleteButton onPress={onDelete}></DeleteButton>
       </View>
@@ -156,10 +164,6 @@ export default function CartsScreen({ navigation, route }) {
           ></CheckBox>
           <Text>Tất cả</Text>
         </View>
-        <View style={styles.selectTable}>
-          <Text style={{ fontWeight: "bold" }}>Chọn bàn: </Text>
-          <SelectButton onPress={() => setDialogVisible(true)}></SelectButton>
-        </View>
       </View>
       {loading ? (
         <Loading></Loading>
@@ -168,13 +172,13 @@ export default function CartsScreen({ navigation, route }) {
           <FlatList
             data={carts}
             renderItem={({ item, index }) => (
-              <CartItem
+              <BookCartItem
                 item={item}
                 index={index}
                 allChecked={allChecked}
                 setCarts={setCarts}
                 carts={carts}
-              ></CartItem>
+              ></BookCartItem>
             )}
             keyExtractor={(item) => `${item._id}`}
             style={{ height: "75%" }}
@@ -187,33 +191,18 @@ export default function CartsScreen({ navigation, route }) {
                 <Text>{tableCode || "chưa chọn"}</Text>
               </View>
               <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontWeight: "bold" }}>Tổng cộng: </Text>
-                <Text style={styles.price}>
-                  {`${calTotalPrice(carts)}`}{" "}
-                  <Text style={{ textDecorationLine: "underline" }}>đ</Text>{" "}
-                </Text>
+                <Text style={{ fontWeight: "bold" }}>Số sách đã chọn: </Text>
+                <Text style={styles.price}>{`${calTotalBook(carts)}`} </Text>
               </View>
             </View>
-            <BuyButton label="Đặt hàng" onPress={onBuy}></BuyButton>
+            <BuyButton label="Mượn sách" onPress={onBuy}></BuyButton>
           </View>
         </View>
       )}
-      <Dialog
-        visible={dialogVisible}
-        title="Chọn bàn"
-        onTouchOutside={() => setDialogVisible(false)}
-        animationType={"fade"}
-        titleStyle={{ textAlign: "center", fontWeight: "bold" }}
-      >
-        <SelectTable
-          setTableCode={setTableCode}
-          tableCode={tableCode}
-        ></SelectTable>
-      </Dialog>
       {updateLoading && <LoadingPage></LoadingPage>}
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   cartContainer: {},
   header: {

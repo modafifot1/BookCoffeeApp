@@ -13,7 +13,6 @@ export const orderApi = {
     );
   },
   purchase(cartItems, tableCode, total, paymentMethod) {
-    console.log(cartItems);
     return axiosClient.post(
       "/orders/purchase",
       {

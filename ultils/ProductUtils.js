@@ -24,3 +24,9 @@ export const calTotalPrice = (carts) => {
       .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " "
   );
 };
+export const calTotalBook = (carts) => {
+  return carts.reduce(
+    (pre, cur) => pre + (cur.isChecked ? cur.quantity : 0),
+    0
+  );
+};

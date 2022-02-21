@@ -9,6 +9,9 @@ import { SelectedcartsScreen } from "./Selectedcarts";
 import { ProductDetailScreen } from "./ProductDetail";
 import { OrderDetailScreen } from "./OrderDetail";
 import { OrderResultScreen } from "./OrderResult";
+import { BooksScreen } from "./Books";
+import { BookDetailScreen } from "./BookDetail";
+import { BookCartsScreen } from "./BookCarts";
 export {
   ProductsScreen,
   CartsScreen,
@@ -21,4 +24,7 @@ export {
   ProductDetailScreen,
   OrderDetailScreen,
   OrderResultScreen,
+  BooksScreen,
+  BookDetailScreen,
+  BookCartsScreen,
 };

@@ -1,19 +1,19 @@
 import { axiosClient } from "./axiosClient";
 
-export const cartApi = {
+export const borrowedBookCartApi = {
   addItem(cartItems) {
-    return axiosClient.post("/carts", cartItems, {
+    return axiosClient.post("/bookCarts", cartItems, {
       headers: {
         "Content-Type": "application/json",
       },
     });
   },
   getCartItems() {
-    return axiosClient.get("/carts");
+    return axiosClient.get("/bookCarts");
   },
-  updateCartItem(cartId, quantity) {
+  updateCartItem(borrowedBookCartId, quantity) {
     return axiosClient.put(
-      `/carts/${cartId}`,
+      `/bookCarts/${borrowedBookCartId}`,
       { quantity },
       {
         headers: {
@@ -22,12 +22,12 @@ export const cartApi = {
       }
     );
   },
-  deleteCartItem(cartItems) {
-    return axiosClient.delete("/carts/", {
+  deleteCartItem(borrowedBookCartItems) {
+    return axiosClient.delete("/bookCarts", {
       headers: {
         "Content-Type": "application/json",
       },
-      data: cartItems,
+      data: borrowedBookCartItems,
     });
   },
 };

@@ -28,7 +28,7 @@ export const subcribeTable = createAsyncThunk(
       const res = await tableApi.subcribeTable(tableIds);
       return res;
     } catch (error) {
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 );

@@ -3,28 +3,56 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { vw } from "../ultils";
 import { SelectedCartItem } from "./SelectedCartItem";
 import { LinearGradient } from "expo-linear-gradient";
-const order = {
-  item: {
-    confirmed: true,
-    _id: "60a5ecdd98cf780015b07baaf",
-    typeId: 2,
-    name: "Soda bạc hà6",
-    unitPrice: 20001,
-    imageUrl:
-      "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-    discountOff: 5,
-    description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
-    discountMaximum: 5000,
-    createAt: "2021-05-20T05:00:13.401Z",
-    __v: 0,
-    numOfFeedbacks: 1,
-    numOfStars: 5,
-    quantity: 2,
-  },
+import { useDispatch } from "react-redux";
+import { getOrderById } from "../reducers/orderSlice";
+const statusMap = {
+  0: "Chờ xác nhận",
+  1: "Đang chuẩn bị",
+  2: "Hoàn thành",
 };
-export const OrderItem = ({ navigation }) => {
+// const order = {
+//   item: {
+//     confirmed: true,
+//     _id: "60a5ecdd98cf780015b07baaf",
+//     typeId: 2,
+//     name: "Soda bạc hà6",
+//     unitPrice: 20001,
+//     imageUrl:
+//       "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
+//     discountOff: 5,
+//     description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
+//     discountMaximum: 5000,
+//     createAt: "2021-05-20T05:00:13.401Z",
+//     __v: 0,
+//     numOfFeedbacks: 1,
+//     numOfStars: 5,
+//     quantity: 2,
+//   },
+// };
+export const OrderItem = ({ navigation, order }) => {
+  const dispatch = useDispatch();
+  const onDetail = () => {
+    dispatch(
+      getOrderById({
+        orderId: order._id,
+        resolve: (res) => {
+          if (res.status < 300) {
+            navigation.navigate("OrderDetail", {
+              orderItems: res.orderItems,
+              total: res.total,
+              tableCode: res.total,
+              status: res.statusId,
+              paymentMethod: res.paymentMethod,
+              createAt: res.createAt,
+              isPaid: res.isPaid,
+            });
+          }
+        },
+      })
+    );
+  };
   return (
-    <View>
+    <View style={{ paddingTop: 20 }}>
       <View
         style={{
           paddingHorizontal: 30,
@@ -51,15 +79,17 @@ export const OrderItem = ({ navigation }) => {
                 fontSize: 12,
               }}
             >
-              {5}
+              {order.tableCode}
             </Text>
           </View>
           <View>
-            <Text>{` Số lượng sản phẩm ${5}`}</Text>
+            <Text>{` Số lượng sản phẩm ${order.numOfItems}`}</Text>
           </View>
         </View>
         <View style={{ alignSelf: "flex-start" }}>
-          <Text style={{ color: "#e83e52" }}>{`Hoàn thành`}</Text>
+          <Text style={{ color: "#e83e52" }}>{`${
+            statusMap[order.statusId]
+          }`}</Text>
         </View>
       </View>
       <SelectedCartItem
@@ -72,11 +102,7 @@ export const OrderItem = ({ navigation }) => {
             >
               <TouchableOpacity
                 style={styles.viewDetailsButton}
-                onPress={() =>
-                  navigation.navigate("OrderDetail", {
-                    orderId: order._id,
-                  })
-                }
+                onPress={onDetail}
               >
                 <Text style={{ color: "gray" }}>Xem thêm sản phẩm</Text>
               </TouchableOpacity>

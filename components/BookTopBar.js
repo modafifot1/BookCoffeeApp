@@ -4,11 +4,14 @@ import { SearchInput } from "./TextInput";
 import Ionicon from "react-native-vector-icons/Ionicons";
 
 import { vh, vw } from "../ultils";
-const TopBar = forwardRef((props, ref) => {
+const BookTopBar = forwardRef(({ navigation }, ref) => {
   const [opacity, setOpacity] = useState(0);
   const onScrollBar = (e) => {
     const { contentOffset } = e.nativeEvent;
     setOpacity(contentOffset.y / vh(25));
+  };
+  const onBookCart = () => {
+    navigation.navigate("BookCart");
   };
   useImperativeHandle(ref, () => ({ onScrollBar }));
   return (
@@ -18,6 +21,7 @@ const TopBar = forwardRef((props, ref) => {
         { backgroundColor: `rgba(255, 255, 255, ${opacity})` },
       ]}
     >
+      <View></View>
       <View
         style={[
           styles.searchContainer,
@@ -28,11 +32,17 @@ const TopBar = forwardRef((props, ref) => {
         <TouchableOpacity>
           <Ionicon name={"search-outline"} style={styles.searchIcon}></Ionicon>
         </TouchableOpacity>
+        <TouchableOpacity onPress={onBookCart}>
+          <Ionicon
+            name="ios-bookmarks-outline"
+            style={styles.searchIcon}
+          ></Ionicon>
+        </TouchableOpacity>
       </View>
     </View>
   );
 });
-export default TopBar;
+export default BookTopBar;
 // export default function TopBar({ ref }) {
 //   const [opacity, setOpacity] = useState(0);
 //   useImperativeHandle(ref, () => ({
@@ -80,15 +90,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   searchInput: {
-    backgroundColor: "rgba(234, 67, 53, 0.8)",
+    // backgroundColor: "rgba(234, 67, 53, 0.8)",
+    backgroundColor: "rgba(203, 203, 203, 0.8)",
     height: "100%",
     borderRadius: 20,
     paddingHorizontal: 10,
-    width: "90%",
+    flex: 1,
   },
   searchIcon: {
     fontSize: vh(3),
-    paddingLeft: 5,
-    color: "#ea4335",
+    marginLeft: 15,
+    // color: "#ea4335",
+    color: "rgb(110, 199, 176)",
   },
 });

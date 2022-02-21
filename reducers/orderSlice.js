@@ -7,13 +7,13 @@ const initialState = {
   msg: "",
   orders: [],
   newOrder: {},
+  loadingDetail: false,
 };
 
 export const order = createAsyncThunk(
   "order/orders",
   async ({ cartItems, tableCode, resolve }, { rejectWithValue, dispatch }) => {
     try {
-      console.log(cartItems);
       const res = await orderApi.order(cartItems, tableCode);
       resolve(res);
       return res;
@@ -71,6 +71,7 @@ export const getOrderById = createAsyncThunk(
     try {
       const res = await orderApi.getOrderById(orderId);
       resolve(res);
+      return res;
     } catch (error) {
       resolve(error.response.data);
       return rejectWithValue(error.response.data);
@@ -123,7 +124,7 @@ const orderSlice = createSlice({
       state.loading = false;
       state.msg = action.payload.msg;
       state.status = action.payload.status;
-      state.orders = action.payload.oreders;
+      state.orders = action.payload.orders;
     },
     [getOrdersByStatus.rejected](state, action) {
       state.loading = false;
@@ -131,17 +132,17 @@ const orderSlice = createSlice({
       state.msg = "";
     },
     [getOrderById.pending](state, action) {
-      state.loading = true;
+      state.loadingDetail = true;
       state.status = null;
       state.msg = "";
     },
     [getOrderById.fulfilled](state, action) {
-      state.loading = false;
+      state.loadingDetail = false;
       state.msg = action.payload.msg;
       state.status = action.payload.status;
     },
     [getOrderById.rejected](state, action) {
-      state.loading = false;
+      state.loadingDetail = false;
       state.status = null;
       state.msg = "";
     },
