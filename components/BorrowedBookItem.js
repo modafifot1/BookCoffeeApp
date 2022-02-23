@@ -1,32 +1,32 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { vw } from "../ultils";
-import { SelectedCartItem } from "./SelectedCartItem";
+import { SelectedBookCartItem } from "./SelectedBookCartItem";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
-import { getOrderById } from "../reducers/orderSlice";
+// import { getOrderById } from "../reducers/orderSlice";
+import { getBorrowdBookedById } from "../reducers/borrowedBookSlice";
+import { calTotalBook } from "../ultils/ProductUtils";
 const statusMap = {
   0: "Chờ xác nhận",
   1: "Đang chuẩn bị",
   2: "Hoàn thành",
 };
 
-export const OrderItem = ({ navigation, order }) => {
+export const BorrowedBookItem = ({ navigation, borrowedBook }) => {
   const dispatch = useDispatch();
   const onDetail = () => {
     dispatch(
-      getOrderById({
-        orderId: order._id,
+      getBorrowdBookedById({
+        borrowedBookId: borrowedBook._id,
         resolve: (res) => {
           if (res.status < 300) {
-            navigation.navigate("OrderDetail", {
-              orderItems: res.orderItems,
-              total: res.total,
-              tableCode: res.total,
+            navigation.navigate("BorowedBookDetail", {
+              borrowedBookItems: res.borrowedBookItems,
+              tableCode: res.tableCode,
               status: res.statusId,
-              paymentMethod: res.paymentMethod,
               createAt: res.createAt,
-              isPaid: res.isPaid,
+              updateAt: res.updateAt,
             });
           }
         },
@@ -61,21 +61,24 @@ export const OrderItem = ({ navigation, order }) => {
                 fontSize: 12,
               }}
             >
-              {order.tableCode}
+              {borrowedBook.tableCode}
             </Text>
           </View>
           <View>
-            <Text>{` Số lượng sản phẩm ${order.numOfItems}`}</Text>
+            <Text>{` Số lượng sách ${borrowedBook.borrowedBookItems.reduce(
+              (pre, cur) => pre + cur.quantity,
+              0
+            )}`}</Text>
           </View>
         </View>
         <View style={{ alignSelf: "flex-start" }}>
           <Text style={{ color: "#e83e52" }}>{`${
-            statusMap[order.statusId]
+            statusMap[borrowedBook.statusId]
           }`}</Text>
         </View>
       </View>
-      <SelectedCartItem
-        item={order.item}
+      <SelectedBookCartItem
+        item={borrowedBook.item}
         SubComponent={() => {
           return (
             <View
@@ -86,12 +89,12 @@ export const OrderItem = ({ navigation, order }) => {
                 style={styles.viewDetailsButton}
                 onPress={onDetail}
               >
-                <Text style={{ color: "gray" }}>Xem thêm sản phẩm</Text>
+                <Text style={{ color: "gray" }}>Xem thêm sách</Text>
               </TouchableOpacity>
             </View>
           );
         }}
-      ></SelectedCartItem>
+      ></SelectedBookCartItem>
     </View>
   );
 };

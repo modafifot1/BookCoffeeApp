@@ -80,7 +80,7 @@ export default function LoginScreen({ navigation }) {
       </ScrollView>
       <Toast
         title={error ? "Login fail" : "Login succesfully"}
-        message={error}
+        message={error?.msg}
         isError={error ? true : false}
       ></Toast>
     </View>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, createRef } from "react";
 import {
   StyleSheet,
   Animated,
@@ -10,9 +10,10 @@ import {
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { vh, vw } from "../ultils";
 export const Toast = ({ title, message, isError }) => {
-  const messageBoxAnimation = useRef(new Animated.Value(-vh(30))).current;
-  const containerOpacity = useRef(new Animated.Value(1)).current;
-  const zIndex = useRef(new Animated.Value(999)).current;
+  let messageBoxAnimation = useRef(new Animated.Value(-vh(30))).current;
+  let containerOpacity = useRef(new Animated.Value(1)).current;
+  let zIndex = useRef(new Animated.Value(999)).current;
+
   const closeToast = () => {
     Animated.timing(containerOpacity, {
       toValue: 0,

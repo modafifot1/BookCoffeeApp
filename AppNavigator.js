@@ -21,6 +21,9 @@ import {
   BooksScreen,
   BookDetailScreen,
   BookCartsScreen,
+  SelectedBookCartsScreen,
+  BorrowedBooksScreen,
+  BorrowedBookDetailScreen,
 } from "./screens";
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "./ultils";
@@ -134,14 +137,33 @@ const BookStackScreen = () => {
         name="BookCart"
         component={BookCartsScreen}
       ></BookStack.Screen>
+      <BookStack.Screen
+        name="SelectedBookCarts"
+        component={SelectedBookCartsScreen}
+      ></BookStack.Screen>
     </BookStack.Navigator>
+  );
+};
+const BorrowedBookStack = createNativeStackNavigator();
+const BorrowedBookStackScreeen = () => {
+  return (
+    <BorrowedBookStack.Navigator screenOptions={{ headerShown: false }}>
+      <BorrowedBookStack.Screen
+        name="BorrowedBooks"
+        component={BorrowedBooksScreen}
+      ></BorrowedBookStack.Screen>
+      <BorrowedBookStack.Screen
+        name="BorowedBookDetail"
+        component={BorrowedBookDetailScreen}
+      ></BorrowedBookStack.Screen>
+    </BorrowedBookStack.Navigator>
   );
 };
 const LoginStack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
 export default function AppNavigator() {
-  const { loading, token, error } = useSelector((state) => state.auth);
+  const { token, } = useSelector((state) => state.auth);
   const { numOfItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -195,6 +217,11 @@ export default function AppNavigator() {
                   break;
                 case "BookStack":
                   iconName = focused ? "book" : "book-outline";
+                  break;
+                case "BorrowedBookStack":
+                  iconName = focused
+                    ? "ios-bookmarks"
+                    : "ios-bookmarks-outline";
               }
               return <Ionicons name={iconName} size={24} color={color} />;
             },
@@ -219,6 +246,10 @@ export default function AppNavigator() {
             component={OrderStackScreen}
           ></Tab.Screen>
           <Tab.Screen name="BookStack" component={BookStackScreen}></Tab.Screen>
+          <Tab.Screen
+            name="BorrowedBookStack"
+            component={BorrowedBookStackScreeen}
+          ></Tab.Screen>
           <Tab.Screen
             name="MyProfileStack"
             component={MyProfileStackScreen}

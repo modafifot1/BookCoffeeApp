@@ -29,6 +29,8 @@ export const getBooksPerPage = createAsyncThunk(
       resolve(res);
       return res;
     } catch (error) {
+      resolve(error.response.data)
+
       return rejectWithValue(error.response.data);
     }
   }

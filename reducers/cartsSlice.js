@@ -14,7 +14,6 @@ export const addCartItem = createAsyncThunk(
   "add/cart",
   async ({ cartItems, resovle }, { rejectWithValue, dispatch }) => {
     try {
-      console.log();
       const res = await cartApi.addItem({ cartItems });
       resovle(res);
       return res;
@@ -32,8 +31,6 @@ export const getCartItems = createAsyncThunk(
       resolve(res);
       return res;
     } catch (error) {
-      console.log(error);
-
       resolve(error.response.data);
 
       return rejectWithValue(error.response.data);

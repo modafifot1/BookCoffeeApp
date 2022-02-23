@@ -7,6 +7,7 @@ import { getOrdersByStatus } from "../reducers/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "../components/LoadingMore";
 import { LoadingPage } from "./LoadingPage";
+import { vh } from "../ultils";
 const SecondRoute = ({ status }) => {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -30,14 +31,15 @@ const SecondRoute = ({ status }) => {
         <OrderItem order={item} navigation={navigation}></OrderItem>
       )}
       keyExtractor={(order) => `${order._id}`}
+      style={{ height: vh(86) }}
     ></FlatList>
   );
 };
 
-const allOrder = () => <SecondRoute status={-1}></SecondRoute>;
-const pendingOrder = () => <SecondRoute status={0}></SecondRoute>;
-const preparingOrder = () => <SecondRoute status={1}></SecondRoute>;
-const completeOrder = () => <SecondRoute status={2}></SecondRoute>;
+const AllOrder = () => <SecondRoute status={-1}></SecondRoute>;
+const PendingOrder = () => <SecondRoute status={0}></SecondRoute>;
+const PreparingOrder = () => <SecondRoute status={1}></SecondRoute>;
+const CompleteOrder = () => <SecondRoute status={2}></SecondRoute>;
 const TopTab = createMaterialTopTabNavigator();
 export const TopOrderStackScreen = () => {
   return (
@@ -53,22 +55,22 @@ export const TopOrderStackScreen = () => {
     >
       <TopTab.Screen
         name="allOrder"
-        component={allOrder}
+        component={AllOrder}
         options={{ tabBarLabel: "Tất cả" }}
       ></TopTab.Screen>
       <TopTab.Screen
         name="pendingOrder"
-        component={pendingOrder}
+        component={PendingOrder}
         options={{ tabBarLabel: "Chờ xác nhận" }}
       ></TopTab.Screen>
       <TopTab.Screen
         name="preparingOrder"
-        component={preparingOrder}
+        component={PreparingOrder}
         options={{ tabBarLabel: "Đang chuẩn bị" }}
       ></TopTab.Screen>
       <TopTab.Screen
         name="completedOrder"
-        component={completeOrder}
+        component={CompleteOrder}
         options={{ tabBarLabel: "Hoàn thành" }}
       ></TopTab.Screen>
     </TopTab.Navigator>

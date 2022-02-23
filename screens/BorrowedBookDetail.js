@@ -8,13 +8,12 @@ import {
   Image,
   BackHandler,
 } from "react-native";
-import { SelectedCartItem } from "../components/SelectedCartItem";
+import { SelectedBookCartItem } from "../components/SelectedBookCartItem";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import { vh, vw } from "../ultils";
-import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import PaidIcon from "../assets/images/paid.png";
-import UnPaidIcon from "../assets/images/unpaid.png";
-export const OrderDetailScreen = ({ route, navigation }) => {
+import moment from "moment";
+
+export const BorrowedBookDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     const backCustom = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -25,15 +24,8 @@ export const OrderDetailScreen = ({ route, navigation }) => {
   const backScreen = () => {
     navigation.pop(1);
   };
-  const {
-    orderItems,
-    total,
-    tableCode,
-    status,
-    paymentMethod,
-    createAt,
-    isPaid,
-  } = route.params;
+  const { borrowedBookItems, tableCode, createAt, status, updateAt } =
+    route.params;
 
   return (
     <View style={styles.orderContainer}>
@@ -47,14 +39,14 @@ export const OrderDetailScreen = ({ route, navigation }) => {
           <IonIcons name="chevron-back" style={{ fontSize: 18 }}></IonIcons>
         </TouchableOpacity>
         <Text style={{ marginTop: "auto", marginLeft: 20, fontWeight: "bold" }}>
-          Chi tiết đơn hàng
+          Chi tiết thông tin sách mượn
         </Text>
       </View>
 
       <FlatList
-        data={orderItems}
+        data={borrowedBookItems}
         renderItem={({ item, index }) => (
-          <SelectedCartItem item={item}></SelectedCartItem>
+          <SelectedBookCartItem item={item}></SelectedBookCartItem>
         )}
         keyExtractor={(item) => `${item._id}`}
         style={{ height: vh(86) }}
@@ -67,18 +59,6 @@ export const OrderDetailScreen = ({ route, navigation }) => {
               width: vw(100),
             }}
           >
-            <Image
-              source={isPaid ? PaidIcon : UnPaidIcon}
-              style={{
-                width: 150,
-                height: 70,
-                position: "absolute",
-                zIndex: 999,
-                top: 0,
-                right: 100,
-                resizeMode: "center",
-              }}
-            ></Image>
             <View>
               <View style={styles.selectedTable}>
                 <Text> Đơn hàng bàn số: </Text>
@@ -101,72 +81,48 @@ export const OrderDetailScreen = ({ route, navigation }) => {
                 </Text>
               </View>
               <View>
-                <Text>{` Số lượng sản phẩm ${orderItems.length}`}</Text>
+                <Text>{` Số lượng sách mượn ${borrowedBookItems.reduce(
+                  (pre, cur) => pre + cur.quantity,
+                  0
+                )}`}</Text>
               </View>
             </View>
             <View style={{ alignSelf: "flex-start" }}>
-              <Text
-                style={{ color: "#e83e52" }}
-              >{`${status ===0 ?"Chờ xác nhận":status ===1?"Đang chuẩn bị":"Hoàn thành"}`}</Text>
+              <Text style={{ color: "#e83e52" }}>{`${
+                status === 0
+                  ? "Chờ xác nhận"
+                  : status === 1
+                  ? "Đang mượn"
+                  : "Đã trả"
+              }`}</Text>
             </View>
           </View>
         )}
         ListFooterComponent={() => (
           <View style={styles.footer}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "flex-end",
-              }}
-            >
-              <Text>Tổng thanh toán: </Text>
-              <Text
-                style={{
-                  color: "white",
-                  backgroundColor: "#e83e52",
-                  paddingHorizontal: 10,
-                  borderRadius: 5,
-                }}
-              >
-                {`${
-                  Math.round(total)
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " "
-                }`}{" "}
-                <Text style={{ textDecorationLine: "underline" }}>đ</Text>{" "}
-              </Text>
-            </View>
             <View style={{ alignSelf: "flex-start", marginTop: 10 }}>
-              <View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingTop: 10,
-                  }}
-                >
-                  <MaterialIcon
-                    name="payments"
-                    style={{ fontSize: 16, color: "#e83e52" }}
-                  ></MaterialIcon>
-                  <Text style={{ marginLeft: 10, fontWeight: "bold" }}>
-                    Phương thức thanh toán
-                  </Text>
-                </View>
-                <View>
-                  <Text style={{ color: "gray", marginLeft: 25 }}>{`${
-                    paymentMethod === "COD" ? "Tiền mặt" : "Ví momo"
-                  }`}</Text>
-                </View>
-              </View>
               <View style={{ flexDirection: "row", marginTop: 10 }}>
                 <Text style={{ color: "gray", fontStyle: "italic" }}>
-                  Ngày tạo đơn
+                  Ngày mượn:
                 </Text>
                 <Text
                   style={{ color: "gray", marginLeft: 10, fontStyle: "italic" }}
                 >
-                  {`${new Date(createAt).toLocaleString()}`}
+                  {`${moment(createAt).format("DD - MM - YYYY", "hh:mm:ss")}`}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <Text style={{ color: "gray", fontStyle: "italic" }}>
+                  Ngày trả:
+                </Text>
+                <Text
+                  style={{ color: "gray", marginLeft: 10, fontStyle: "italic" }}
+                >
+                  {`${
+                    updateAt && status == 2
+                      ? moment(createAt).format("DD - MM - YYYY", "hh:mm:ss")
+                      : "Chưa trả"
+                  }`}
                 </Text>
               </View>
             </View>

@@ -14,7 +14,7 @@ const rootReducer = {
   table: tableReducer,
   order: orderReducer,
   book: bookReducer,
-  borroedBook: borrowedBookReducer,
+  borrowedBook: borrowedBookReducer,
   borrowedBookCart: borrowedBookCartReducer,
 };
 export default configureStore({

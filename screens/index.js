@@ -12,6 +12,9 @@ import { OrderResultScreen } from "./OrderResult";
 import { BooksScreen } from "./Books";
 import { BookDetailScreen } from "./BookDetail";
 import { BookCartsScreen } from "./BookCarts";
+import { SelectedBookCartsScreen } from "./SelectedBookCart";
+import { BorrowedBooksScreen } from "./BorrowedBooks";
+import { BorrowedBookDetailScreen } from "./BorrowedBookDetail";
 export {
   ProductsScreen,
   CartsScreen,
@@ -27,4 +30,7 @@ export {
   BooksScreen,
   BookDetailScreen,
   BookCartsScreen,
+  SelectedBookCartsScreen,
+  BorrowedBooksScreen,
+  BorrowedBookDetailScreen,
 };

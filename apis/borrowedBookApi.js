@@ -1,8 +1,8 @@
-import { axiosClient } from ".";
+import { axiosClient } from "./axiosClient";
 
 export const borrowedBookApi = {
-  getBorrowedBooks() {
-    return axiosClient.get("/borrowedBooks");
+  getBorrowedBooksByStatus(status) {
+    return axiosClient.get(`/borrowedBooks/statuses/${status}`);
   },
   getBorrowdBookedById(borrowedBookId) {
     return axiosClient.get(`/borrowedBooks/${borrowedBookId}`);

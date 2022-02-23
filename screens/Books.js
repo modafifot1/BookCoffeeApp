@@ -6,13 +6,11 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
-import TopBar from "../components/TopBar";
 import BookTopBar from "../components/BookTopBar";
 import TopBanner from "../assets/images/bookTopBanner.jpg";
 import { vh } from "../ultils";
-import { getBooksPerPage, resetPage } from "../reducers/bookSlice";
+import { getBooksPerPage } from "../reducers/bookSlice";
 import { useDispatch, useSelector } from "react-redux";
-// import BookListItem from "../components/";
 import { Toast } from "../components/Toast";
 import { SwipeablePanel } from "rn-swipeable-panel";
 import { SwipperBookDetail } from "../components/SwipperBookDetail";
@@ -21,11 +19,13 @@ import { LoadingPage } from "../components/LoadingPage";
 import { BookListItem } from "../components/BookListItem";
 
 export const BooksScreen = ({ navigation }) => {
+  console.log("Vo dau");
   const isFocused = useIsFocused();
-  // const [nextPage, setNextPage] = useState(1);
   const [swipperActive, setSwipperActive] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const { books, isLimited } = useSelector((state) => state.book);
+  console.log("Vo book: ", books);
+
   const dispatch = useDispatch();
   const childRef = useRef();
   const [loadingMore, setLoadingMore] = useState(false);
@@ -69,12 +69,6 @@ export const BooksScreen = ({ navigation }) => {
       );
     }
   };
-  // useEffect(() => {
-  //   if (isFocused && nextPage > 1) {
-  //     dispatch(resetPage());
-  //     dispatch(getBooksPerPage({ page: 1, resolve: (res) => {} }));
-  //   }
-  // }, [isFocused]);
 
   return (
     <View>

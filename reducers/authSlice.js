@@ -70,8 +70,8 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.error = null;
       state.status = {
-        msg: action.payload.msg,
-        status: action.payload.status,
+        msg: action.payload?.msg,
+        status: action.payload?.status,
       };
     },
     [signup.pending](state) {

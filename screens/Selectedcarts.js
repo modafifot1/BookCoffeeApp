@@ -142,8 +142,8 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
     jsonData.merchantcode = merchantcode; //edit your merchantcode here
     jsonData.merchantnamelabel = merchantNameLabel;
     jsonData.description = billdescription;
-    jsonData.amount = total; //order total amount
-    jsonData.orderId = "ID20181123192300";
+    jsonData.amount = parseInt(total); //order total amount
+    jsonData.orderId = newOrder.orderId;
     jsonData.orderLabel = "Ma don hang";
 
     let dataPayment = await RNMomosdk.requestPayment(jsonData);
@@ -152,6 +152,7 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   const momoHandleResponse = async (response) => {
     try {
       let isPaid = false;
+      console.log("Response from momo: ", response);
       if (response && response.status == 0) {
         //SUCCESS continue to submit momoToken,phonenumber to server
         let fromapp = response.fromapp; //ALWAYS:: fromapp == momotransfer
@@ -162,7 +163,7 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
         if (message === "Successful") {
           const data = {
             partnerCode: merchantcode,
-            amount: total,
+            amount: parseInt(total),
             customerNumber: phonenumber,
             appData: momoToken,
             version: 2.0,

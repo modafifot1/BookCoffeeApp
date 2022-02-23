@@ -4,14 +4,7 @@ import { StyleSheet, View, FlatList, Text } from "react-native";
 import { BookCartItem } from "../components/BookCartItem";
 import { vh, vw } from "../ultils";
 import CheckBox from "@react-native-community/checkbox";
-import {
-  SaveButton,
-  DeleteButton,
-  BuyButton,
-  SelectButton,
-} from "../components/MyButton";
-import { Dialog } from "react-native-simple-dialogs";
-import { SelectTable } from "../components/SelectTable";
+import { DeleteButton, BuyButton } from "../components/MyButton";
 import { LoadingPage } from "../components/LoadingPage";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,7 +19,8 @@ import {
 import { Loading } from "../components/LoadingMore";
 import { calTotalBook } from "../ultils/ProductUtils";
 import { Toast } from "../components/Toast";
-import { order } from "../reducers/orderSlice";
+import { createBorrowedBook } from "../reducers/borrowedBookSlice";
+import { useToast } from "react-native-fast-toast";
 
 export const BookCartsScreen = ({ navigation, route }) => {
   const [toastContent, setToastContent] = useState({
@@ -39,11 +33,11 @@ export const BookCartsScreen = ({ navigation, route }) => {
   const { numOfItems, loading, updateLoading } = useSelector(
     (state) => state.borrowedBookCart
   );
-  const { loading: orderLoading } = useSelector((state) => state.order);
+  const { borrowedBooks } = useSelector((state) => state.borrowedBook);
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const [carts, setCarts] = useState([]);
-
+  const toast = useToast();
   useEffect(() => {
     if (isFocused) {
       navigation.dispatch(CommonActions.setParams({ selectedItemId: "" }));
@@ -64,11 +58,10 @@ export const BookCartsScreen = ({ navigation, route }) => {
       );
     }
   }, [isFocused]);
-  const [dialogVisible, setDialogVisible] = useState(false);
   const [allChecked, setAllChecked] = useState(-1);
   const onBuy = () => {
     const selectedCarts = carts.filter((item) => item.isChecked);
-    const cartItems = selectedCarts.map((item) => item._id);
+    // const cartItems = selectedCarts.map((item) => item._id);
     if (!selectedCarts) {
       setToastContent({
         title: "Lỗi",
@@ -77,30 +70,26 @@ export const BookCartsScreen = ({ navigation, route }) => {
       });
       return;
     }
-    if (!tableCode) {
-      setToastContent({
-        title: "Lỗi",
-        messsage: "Vui lòng chọn bàn!",
-        isError: true,
-      });
-      return;
-    }
     dispatch(
-      order({
-        cartItems,
-        tableCode,
+      createBorrowedBook({
+        borrowedBookItems: selectedCarts,
         resolve: (res) => {
           if (res.status < 300) {
-            navigation.navigate("Selectedcarts", {
+            toast.show("Đăng ký mượn sách thành công!", {
+              type: "success",
+              duration: 3000,
+              animationType: "zoom-in",
+            });
+            navigation.navigate("SelectedBookCarts", {
               selectedCarts,
-              tableCode,
-              total: res.total,
+              tableCode: res.borowedBook.tableCode,
+              createAt: res.borowedBook.createAt,
             });
           } else {
-            setToastContent({
-              title: "Lỗi",
-              messsage: res.msg,
-              isError: true,
+            toast.show(res.msg, {
+              type: "danger",
+              duration: 3000,
+              animationType: "zoom-in",
             });
           }
         },
@@ -131,7 +120,7 @@ export const BookCartsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.cartContainer}>
-      {orderLoading && <LoadingPage></LoadingPage>}
+      {borrowedBooks.loading && <LoadingPage></LoadingPage>}
       {
         <Toast
           title={toastContent.title}

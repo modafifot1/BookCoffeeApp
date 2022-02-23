@@ -66,7 +66,7 @@ export const deleteCartItems = createAsyncThunk(
       resolve(res);
       return res;
     } catch (error) {
-      console.log(error);
+      error;
       resolve(error.response.data);
       return rejectWithValue(error.response.data);
     }
@@ -96,7 +96,7 @@ const borrowedBookCartSlice = createSlice({
       state.loading = true;
       state.msg = "";
       state.status = null;
-      console.log("Vo1");
+      ("Vo1");
     },
     [getCartItems.fulfilled](state, action) {
       state.borrowedBookCartItems = action.payload.borrowedBookCartItems;
