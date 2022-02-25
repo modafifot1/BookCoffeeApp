@@ -7,6 +7,8 @@ import orderReducer from "./reducers/orderSlice";
 import bookReducer from "./reducers/bookSlice";
 import borrowedBookCartReducer from "./reducers/borrowedBookCartSlice";
 import borrowedBookReducer from "./reducers/borrowedBookSlice";
+import profileReducer from "./reducers/profileSlice";
+import feedbackReducer from "./reducers/feedbackSlice";
 const rootReducer = {
   auth: authReducer,
   product: productReducer,
@@ -16,6 +18,8 @@ const rootReducer = {
   book: bookReducer,
   borrowedBook: borrowedBookReducer,
   borrowedBookCart: borrowedBookCartReducer,
+  profile: profileReducer,
+  feedback: feedbackReducer,
 };
 export default configureStore({
   reducer: rootReducer,

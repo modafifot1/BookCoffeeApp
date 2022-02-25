@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosClient, bookApi } from "../apis";
 import { getData } from "../ultils";
+import { setFeedbacks } from "./feedbackSlice";
 
 const initialState = {
   loading: false,
@@ -18,6 +19,12 @@ const initialState = {
     loading: false,
   },
   isLimited: false,
+  relatedBooks: {
+    data: [],
+    status: null,
+    msg: "",
+    loading: true,
+  },
 };
 
 export const getBooksPerPage = createAsyncThunk(
@@ -29,7 +36,7 @@ export const getBooksPerPage = createAsyncThunk(
       resolve(res);
       return res;
     } catch (error) {
-      resolve(error.response.data)
+      resolve(error.response.data);
 
       return rejectWithValue(error.response.data);
     }
@@ -40,10 +47,21 @@ export const getBookById = createAsyncThunk(
   async ({ bookId, resolve }, { rejectWithValue, dispatch }) => {
     try {
       const res = await bookApi.getBookById(bookId);
+      if (res.status < 300) dispatch(setFeedbacks(res));
       resolve(res);
       return res;
     } catch (error) {
       resolve(error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const getRelatedBooks = createAsyncThunk(
+  "getRelatedBooks",
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      return await bookApi.getBookForYou();
+    } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
@@ -102,6 +120,22 @@ const bookSlice = createSlice({
       state.book.loading = false;
       state.book.status = action.payload.status;
       state.book.msg = action.payload.msg;
+    },
+    [getRelatedBooks.pending](state, action) {
+      state.relatedBooks.loading = true;
+      state.relatedBooks.msg = "";
+      state.relatedBooks.status = null;
+    },
+    [getRelatedBooks.fulfilled](state, action) {
+      state.relatedBooks.loading = false;
+      state.relatedBooks.msg = action.payload.msg;
+      state.relatedBooks.status = action.payload.status;
+      state.relatedBooks.data = action.payload.relatedBooks;
+    },
+    [getRelatedBooks.rejected](state, action) {
+      state.relatedBooks.loading = false;
+      state.relatedBooks.msg = action.payload.msg;
+      state.relatedBooks.status = action.payload.status;
     },
   },
 });

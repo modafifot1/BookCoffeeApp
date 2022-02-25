@@ -12,6 +12,7 @@ const MyTextInput = ({
   onInputChange,
   onInputBlur,
   onPress,
+  isDisabled,
 }) => {
   return (
     <View style={styles.input}>
@@ -39,6 +40,7 @@ const MyTextInput = ({
           onInputBlur(name);
         }}
         onPressIn={onPress}
+        editable={isDisabled ? !isDisabled : true}
       ></TextInput>
     </View>
   );
@@ -98,12 +100,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     backgroundColor: "#89c6b6",
     paddingHorizontal: 25,
-    paddingVertical: 5,
+    paddingVertical: 1,
     borderRadius: 10,
     elevation: 3,
   },
   textInput: {
     fontSize: 16,
+    height: 22,
   },
   icon: {
     fontSize: 16,

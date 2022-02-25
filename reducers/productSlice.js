@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { axiosClient, productApi } from "../apis";
 import { getData } from "../ultils";
+import { setFeedbacks } from "./feedbackSlice";
 
 const initialState = {
   loading: false,
@@ -35,6 +36,7 @@ export const getProductById = createAsyncThunk(
   async ({ productId, resolve }, { rejectWithValue, dispatch }) => {
     try {
       const res = await productApi.getProductById(productId);
+      if (res.status < 300) dispatch(setFeedbacks(res));
       resolve(res);
       return res;
     } catch (error) {

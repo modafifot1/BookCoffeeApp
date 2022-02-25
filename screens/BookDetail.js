@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBookById, resetDetailPage } from "../reducers/bookSlice";
 import { LoadingPage } from "../components/LoadingPage";
 import { addCartItem } from "../reducers/borrowedBookCartSlice";
-
+import { FeedbackInput } from "../components/FeedbackInput";
 export const BookDetailScreen = ({ route, navigation }) => {
   const { book } = useSelector((state) => state.book);
-
+  const { feedbacks } = useSelector((state) => state.feedback);
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
   const getBookByIdCallback = (res) => {
@@ -57,9 +57,19 @@ export const BookDetailScreen = ({ route, navigation }) => {
   return book.loading || !data ? (
     <LoadingPage></LoadingPage>
   ) : (
-    <ScrollView style={styles.bookDetailContainer}>
-      <View>
-        <View style={{ alignItems: "center" }}>
+    <ScrollView>
+      <View
+        style={{
+          borderBottomWidth: 2,
+          borderBottomColor: "#ccd6dd",
+          paddingBottom: 10,
+        }}
+      >
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
           <Image
             source={{ uri: data.imageUrl }}
             style={{
@@ -136,9 +146,10 @@ export const BookDetailScreen = ({ route, navigation }) => {
           <BuyButton label={"Mượn ngay"} onPress={onBuyNow}></BuyButton>
         </View>
       </View>
+
       <View style={styles.feedback}>
         <View style={styles.topFeedback}>
-          <Text>{`Đánh giá & nhận xét (${data.numOfFeedbacks || 0})`}</Text>
+          <Text>{`Đánh giá & nhận xét (${feedbacks.data.length || 0})`}</Text>
           <View style={{ flexDirection: "row", marginVertical: 10 }}>
             <StarRating
               disabled={true}
@@ -149,11 +160,12 @@ export const BookDetailScreen = ({ route, navigation }) => {
               starStyle={{ marginLeft: 5 }}
             ></StarRating>
             <View style={{ marginLeft: 10 }}>
-              <Text>{`${data.rating || 0}/5 sao`}</Text>
+              <Text>{`${data.rating.toFixed(2) || 0}/5 sao`}</Text>
             </View>
           </View>
         </View>
-        {data.feedbacks?.map((item) => (
+        <FeedbackInput bookId={data._id}></FeedbackInput>
+        {feedbacks.data?.map((item) => (
           <Feedback feedback={item} key={item._id}></Feedback>
         ))}
       </View>
@@ -214,10 +226,7 @@ const styles = StyleSheet.create({
   },
   topFeedback: {},
   feedback: {
-    borderTopWidth: 4,
-    borderTopColor: "#ccd6dd",
     paddingTop: 10,
-    marginTop: 10,
     paddingHorizontal: 20,
   },
 });

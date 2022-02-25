@@ -11,7 +11,7 @@ import Ionicon from "react-native-vector-icons/Ionicons";
 import StarRating from "react-native-star-rating";
 import { calRealPrice } from "../ultils/ProductUtils";
 
-export const BookListItem = ({ book, onAddTocart, onclickDetail }) => {
+export const BookListItemForYou = ({ book, onAddTocart, onclickDetail }) => {
   return (
     <TouchableOpacity
       style={styles.productCardContainer}
@@ -96,11 +96,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 6,
     elevation: 3,
-    margin: 20,
     textShadowOffset: { width: 0, height: 0 },
     height: "100%",
     borderRadius: 10,
-    width: "48%",
+    width: "100%",
   },
   productPrice: {
     flexDirection: "row",

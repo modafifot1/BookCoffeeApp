@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoadingPage } from "../components/LoadingPage";
 const RNMomosdkModule = NativeModules.RNMomosdk;
 const EventEmitter = new NativeEventEmitter(RNMomosdkModule);
+import { useToast } from "react-native-fast-toast";
 
 const merchantname = "BCoffee";
 const merchantcode = "MOMOBFGB20211225";
@@ -29,26 +30,8 @@ const merchantNameLabel = "Bcoffee";
 const billdescription = "Thanh toán BCoffee";
 const enviroment = "0"; //"0": SANBOX , "1": PRODUCTION
 
-// const orderItems = [
-//   {
-//     confirmed: true,
-//     _id: "60a5ecdd98cf780015b07baal",
-//     typeId: 2,
-//     name: "Soda bạc hà6",
-//     unitPrice: 20001,
-//     imageUrl:
-//       "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-//     discountOff: 5,
-//     description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
-//     discountMaximum: 5000,
-//     createAt: "2021-05-20T05:00:13.401Z",
-//     __v: 0,
-//     numOfFeedbacks: 1,
-//     numOfStars: 5,
-//     quantity: 2,
-//   }
-// ];
 export const SelectedcartsScreen = ({ navigation, route }) => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const orderItems = route.params.selectedCarts;
   const tableCode = route.params.tableCode;
@@ -82,6 +65,11 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   EventEmitter.addListener(
     "RCTMoMoNoficationCenterRequestTokenReceived",
     (response) => {
+      toast.show(response?.message, {
+        type: "danger",
+        duration: 3000,
+        animationType: "zoom-in",
+      });
       try {
         if (response && response.status == 0) {
           //SUCCESS: continue to submit momoToken,phonenumber to server
@@ -103,6 +91,11 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
   EventEmitter.addListener(
     "RCTMoMoNoficationCenterRequestTokenState",
     (response) => {
+      toast.show(response?.status, {
+        type: "danger",
+        duration: 3000,
+        animationType: "zoom-in",
+      });
       // status = 1: Parameters valid & ready to open MoMo app.
       // status = 2: canOpenURL failed for URL MoMo app
       // status = 3: Parameters invalid
@@ -145,14 +138,34 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
     jsonData.amount = parseInt(total); //order total amount
     jsonData.orderId = newOrder.orderId;
     jsonData.orderLabel = "Ma don hang";
-
+    jsonData.isDev = true;
+    toast.show("Bắt đầu", {
+      type: "danger",
+      duration: 3000,
+      animationType: "zoom-in",
+    });
     let dataPayment = await RNMomosdk.requestPayment(jsonData);
+    toast.show("Giữa", {
+      type: "danger",
+      duration: 3000,
+      animationType: "zoom-in",
+    });
     momoHandleResponse(dataPayment);
+    toast.show("Kết thúc", {
+      type: "danger",
+      duration: 3000,
+      animationType: "zoom-in",
+    });
   };
   const momoHandleResponse = async (response) => {
     try {
       let isPaid = false;
       console.log("Response from momo: ", response);
+      toast.show(response.message, {
+        type: "danger",
+        duration: 3000,
+        animationType: "zoom-in",
+      });
       if (response && response.status == 0) {
         //SUCCESS continue to submit momoToken,phonenumber to server
         let fromapp = response.fromapp; //ALWAYS:: fromapp == momotransfer

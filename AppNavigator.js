@@ -6,6 +6,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   ProductsScreen,
   CartsScreen,
@@ -115,9 +116,9 @@ const OrderStackScreen = () => {
 const MyProfileStack = createNativeStackNavigator();
 const MyProfileStackScreen = () => {
   return (
-    <MyProfileStack.Navigator>
+    <MyProfileStack.Navigator screenOptions={{ headerShown: false }}>
       <MyProfileStack.Screen
-        name="My profile"
+        name="MyProfile"
         component={MyProfileScreen}
         options={{ title: "My profile" }}
       ></MyProfileStack.Screen>
@@ -160,10 +161,10 @@ const BorrowedBookStackScreeen = () => {
   );
 };
 const LoginStack = createNativeStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function AppNavigator() {
-  const { token, } = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
   const { numOfItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -195,7 +196,7 @@ export default function AppNavigator() {
         <Tab.Navigator
           screenOptions={({ route }) => ({
             headerShown: false,
-            headerTitleAlign: "center",
+            tabBarShowLabel: false,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               switch (route.name) {
@@ -225,10 +226,9 @@ export default function AppNavigator() {
               }
               return <Ionicons name={iconName} size={24} color={color} />;
             },
+            tabBarActiveTintColor: "#ea4335",
+            tabBarInactiveTintColor: "gray",
           })}
-          labeled={false}
-          activeColor={"#ea4335"}
-          inactiveColor={"gray"}
           barStyle={{
             backgroundColor: "white",
           }}

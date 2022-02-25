@@ -18,77 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProductById, resetDetailPage } from "../reducers/productSlice";
 import { LoadingPage } from "../components/LoadingPage";
 import { addCartItem } from "../reducers/cartsSlice";
-// const product = {
-//   confirmed: true,
-//   _id: "60a5ecdd98cf780015b07baal",
-//   typeId: 2,
-//   name: "Soda bạc hà6",
-//   unitPrice: 20001,
-//   imageUrl:
-//     "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-//   discountOff: 5,
-//   description: "Hương vị tươi ngon, 100% hương liệu từ thiên nhiên",
-//   discountMaximum: 5000,
-//   createAt: "2021-05-20T05:00:13.401Z",
-//   __v: 0,
-//   numOfFeedbacks: 1,
-//   numOfStars: 5,
-//   quantity: 2,
-//   feedbacks: [
-//     {
-//       _id: "60a63775ee375d0015b91b3d",
-//       userId: "6076b2ecf8402efee33463c9",
-//       userName: "Tiến Ngô Văn",
-//       content: "Nước bổ dưỡng",
-//       numOfStars: 5,
-//       avataUrl:
-//         "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-//       createAt: "2021-05-20T10:18:29.902Z",
-//       reply: [
-//         {
-//           _id: "61290c3f8d975c00168225b7",
-//           userName: "Admin Do an CNPM",
-//           content: "Cám ơn tiến đã ủng hộ!",
-//           createAt: "2021-08-27T16:01:03.952Z",
-//         },
-//         {
-//           _id: "61298a315b6609001683fafd",
-//           userName: "Admin Do an CNPM",
-//           content: "Cam on ban",
-//           createAt: "2021-08-28T00:58:25.203Z",
-//         },
-//       ],
-//     },
-//     {
-//       _id: "60a63775ee375d00sss15b91b3d",
-//       userId: "6076b2ecf8402efee33463c9",
-//       userName: "Tiến Ngô Văn",
-//       content: "Nước bổ dưỡng",
-//       numOfStars: 5,
-//       avataUrl:
-//         "https://res.cloudinary.com/dacnpm17n2/image/upload/v1621486813/n5zcnq6hwkx0vnlwdl0t.jpg",
-//       createAt: "2021-05-20T10:18:29.902Z",
-//       reply: [
-//         {
-//           _id: "61290c3f8d975c00168225b7",
-//           userName: "Admin Do an CNPM",
-//           content: "Cám ơn tiến đã ủng hộ!",
-//           createAt: "2021-08-27T16:01:03.952Z",
-//         },
-//         {
-//           _id: "61298a315b6609001683fafd",
-//           userName: "Admin Do an CNPM",
-//           content: "Cam on ban",
-//           createAt: "2021-08-28T00:58:25.203Z",
-//         },
-//       ],
-//     },
-//   ],
-// };
+import { FeedbackInput } from "../components/FeedbackInput";
 
 export const ProductDetailScreen = ({ route, navigation }) => {
   const { product, loading } = useSelector((state) => state.product);
-
+  const { feedbacks } = useSelector((state) => state.feedback);
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
   const getProductByIdCallback = (res) => {
@@ -213,7 +147,7 @@ export const ProductDetailScreen = ({ route, navigation }) => {
       </View>
       <View style={styles.feedback}>
         <View style={styles.topFeedback}>
-          <Text>{`Đánh giá & nhận xét (${product.numOfFeedbacks || 0})`}</Text>
+          <Text>{`Đánh giá & nhận xét (${feedbacks.data.length || 0})`}</Text>
           <View style={{ flexDirection: "row", marginVertical: 10 }}>
             <StarRating
               disabled={true}
@@ -224,11 +158,12 @@ export const ProductDetailScreen = ({ route, navigation }) => {
               starStyle={{ marginLeft: 5 }}
             ></StarRating>
             <View style={{ marginLeft: 10 }}>
-              <Text>{`${data.numOfStars || 0}/5 sao`}</Text>
+              <Text>{`${data.numOfStars.toFixed(2) || 0}/5 sao`}</Text>
             </View>
           </View>
         </View>
-        {data.feedbacks?.map((item) => (
+        <FeedbackInput foodId={data._id}></FeedbackInput>
+        {feedbacks.data?.map((item) => (
           <Feedback feedback={item} key={item._id}></Feedback>
         ))}
       </View>

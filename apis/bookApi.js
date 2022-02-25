@@ -10,4 +10,7 @@ export const bookApi = {
   updateBookById(bookId) {
     return axiosClient.put(`/books/${bookId}`);
   },
+  getBookForYou(){
+    return axiosClient.get("/books/related-book/for-you")
+  }
 };

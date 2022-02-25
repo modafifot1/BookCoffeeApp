@@ -17,14 +17,12 @@ import { SwipperBookDetail } from "../components/SwipperBookDetail";
 import { useIsFocused } from "@react-navigation/native";
 import { LoadingPage } from "../components/LoadingPage";
 import { BookListItem } from "../components/BookListItem";
-
+import { BookForYou } from "../components/BookForYou";
 export const BooksScreen = ({ navigation }) => {
-  console.log("Vo dau");
   const isFocused = useIsFocused();
   const [swipperActive, setSwipperActive] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const { books, isLimited } = useSelector((state) => state.book);
-  console.log("Vo book: ", books);
 
   const dispatch = useDispatch();
   const childRef = useRef();
@@ -80,10 +78,16 @@ export const BooksScreen = ({ navigation }) => {
         ListFooterComponent={renderFooter}
         ListFooterComponentStyle={{ marginTop: 20 }}
         ListHeaderComponent={
-          <Image
-            source={TopBanner}
-            style={{ width: "100%", height: vh(25), resizeMode: "stretch" }}
-          />
+          <View>
+            <Image
+              source={TopBanner}
+              style={{ width: "100%", height: vh(25), resizeMode: "stretch" }}
+            />
+            <BookForYou
+              onAddTocart={onClickCart}
+              onclickDetail={onclickDetail}
+            ></BookForYou>
+          </View>
         }
         renderItem={({ item, index }) => (
           <BookListItem
