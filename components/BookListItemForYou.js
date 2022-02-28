@@ -59,7 +59,9 @@ export const BookListItemForYou = ({ book, onAddTocart, onclickDetail }) => {
               }}
             >
               <View style={styles.productPrice}>
-                <Text style={styles.price}>{book.author}</Text>
+                <Text style={styles.price} numberOfLines={1}>
+                  {book.author}
+                </Text>
               </View>
             </View>
           </View>

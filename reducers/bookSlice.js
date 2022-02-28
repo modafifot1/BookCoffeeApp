@@ -23,7 +23,7 @@ const initialState = {
     data: [],
     status: null,
     msg: "",
-    loading: true,
+    loading: false,
   },
 };
 

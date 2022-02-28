@@ -12,7 +12,9 @@ import {
   View,
 } from "react-native";
 import { BookListItemForYou } from "../components/BookListItemForYou";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getRelatedBooks } from "../reducers/bookSlice";
+
 const { width } = Dimensions.get("window");
 
 const SPACING = 5;
@@ -113,12 +115,19 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
   const [isPrevDisabled, setIsPrevDisabled] = useState(false);
   const isFocused = useIsFocused();
   let timer;
+  const dispatch = useDispatch();
   useEffect(() => {
-    setDataWithPlaceholders([{ id: -1 }, ...data, { id: data.length }]);
+    setDataWithPlaceholders([
+      { id: -1 },
+      ...relatedBooks.data,
+      { id: relatedBooks.data.length },
+    ]);
     currentIndex.current = 1;
     setIsPrevDisabled(true);
-  }, [data]);
-
+  }, [relatedBooks.data]);
+  useEffect(() => {
+    dispatch(getRelatedBooks());
+  }, []);
   const handleOnViewableItemsChanged = useCallback(
     ({ viewableItems }) => {
       const itemsInView = viewableItems.filter(
@@ -131,10 +140,10 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
 
       currentIndex.current = itemsInView[0].index;
       console.log(currentIndex.current);
-      setIsNextDisabled(currentIndex.current === data.length);
+      setIsNextDisabled(currentIndex.current === relatedBooks.data.length);
       setIsPrevDisabled(currentIndex.current === 1);
     },
-    [data]
+    [relatedBooks.data]
   );
 
   const handleOnPrev = () => {
@@ -150,7 +159,7 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
     }
   };
   const handleOnNext = () => {
-    if (currentIndex.current === data.length) {
+    if (currentIndex.current === relatedBooks.data.length) {
       return;
     }
 
@@ -166,7 +175,7 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
     if (isFocused) {
       timer = setInterval(() => {
         if (direction === 0) {
-          if (currentIndex.current === data.length) {
+          if (currentIndex.current === relatedBooks.data.length) {
             direction = 1;
           } else {
             if (flatListRef.current) {
@@ -197,7 +206,7 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
     }
   }, [isFocused]);
 
-  // `data` perameter is not used. Therefore, it is annotated with the `any` type to merely satisfy the linter.
+  // `relatedBooks.data` perameter is not used. Therefore, it is annotated with the `any` type to merely satisfy the linter.
   const getItemLayout = (_data, index) => ({
     length: ITEM_LENGTH,
     offset: ITEM_LENGTH * (index - 1),
@@ -282,7 +291,7 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
           { useNativeDriver: false }
         )}
         scrollEventThrottle={16}
-        onViewableItemsChanged={handleOnViewableItemsChanged}
+        // onViewableItemsChanged={handleOnViewableItemsChanged}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 100,
         }}
