@@ -7,6 +7,7 @@ const initialState = {
   token: "",
   status: null,
   loading: false,
+  tokenLoading: true,
 };
 
 export const login = createAsyncThunk(
@@ -49,6 +50,7 @@ const authSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
       axiosClient.defaults.headers.authorization = `Bearer ${action.payload}`;
+      state.tokenLoading = false;
     },
     clearError: (state) => {
       state.error = "";

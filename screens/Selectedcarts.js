@@ -136,31 +136,31 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
     jsonData.merchantnamelabel = merchantNameLabel;
     jsonData.description = billdescription;
     jsonData.amount = parseInt(total); //order total amount
-    jsonData.orderId = newOrder.orderId;
+    jsonData.orderId = newOrder._id;
     jsonData.orderLabel = "Ma don hang";
     jsonData.isDev = true;
-    toast.show("Bắt đầu", {
-      type: "danger",
-      duration: 3000,
-      animationType: "zoom-in",
-    });
+    // toast.show("Bắt đầu", {
+    //   type: "danger",
+    //   duration: 3000,
+    //   animationType: "zoom-in",
+    // });
     let dataPayment = await RNMomosdk.requestPayment(jsonData);
-    toast.show("Giữa", {
-      type: "danger",
-      duration: 3000,
-      animationType: "zoom-in",
-    });
+    // toast.show("Giữa", {
+    //   type: "danger",
+    //   duration: 3000,
+    //   animationType: "zoom-in",
+    // });
     momoHandleResponse(dataPayment);
-    toast.show("Kết thúc", {
-      type: "danger",
-      duration: 3000,
-      animationType: "zoom-in",
-    });
+    // toast.show("Kết thúc", {
+    //   type: "danger",
+    //   duration: 3000,
+    //   animationType: "zoom-in",
+    // });
   };
   const momoHandleResponse = async (response) => {
     try {
       let isPaid = false;
-      console.log("Response from momo: ", response);
+      // console.log("Response from momo: ", response);
       toast.show(response.message, {
         type: "danger",
         duration: 3000,
@@ -181,7 +181,7 @@ export const SelectedcartsScreen = ({ navigation, route }) => {
             appData: momoToken,
             version: 2.0,
             payType: 3,
-            orderId: newOrder.orderId,
+            orderId: newOrder._id,
             partnerRefId,
           };
           dispatch(paymentMomo(data));

@@ -35,7 +35,7 @@ import { TopOrderStackScreen } from "./components/TopTab";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { vw } from "./ultils";
-
+import { LoadingPage } from "./components/LoadingPage";
 const HomeStack = createNativeStackNavigator();
 const HomeStackScreen = () => {
   return (
@@ -164,7 +164,7 @@ const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function AppNavigator() {
-  const { token } = useSelector((state) => state.auth);
+  const { token, tokenLoading } = useSelector((state) => state.auth);
   const { numOfItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -181,7 +181,9 @@ export default function AppNavigator() {
   }, [dispatch]);
   return (
     <NavigationContainer>
-      {!token ? (
+      {tokenLoading ? (
+        <LoadingPage></LoadingPage>
+      ) : !token ? (
         <LoginStack.Navigator screenOptions={{ headerShown: false }}>
           <LoginStack.Screen
             name="Login"

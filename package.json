@@ -7,7 +7,7 @@
     "eject": "expo eject",
     "react-devtools": "react-devtools",
     "build": "expo build:android",
-    "buildRelease": "cd android && gradlew.bat bundleRelease"
+    "buildRelease": "cd android && gradlew.bat assembleRelease"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.7",

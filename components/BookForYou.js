@@ -178,25 +178,29 @@ export const BookForYou = ({ onclickDetail, onAddTocart }) => {
           if (currentIndex.current === relatedBooks.data.length) {
             direction = 1;
           } else {
-            if (flatListRef.current) {
-              flatListRef.current.scrollToIndex({
-                animated: true,
-                index: currentIndex.current + 1,
-              });
+            if (relatedBooks.data.length > 0) {
+              if (flatListRef.current) {
+                flatListRef.current.scrollToIndex({
+                  animated: true,
+                  index: currentIndex.current + 1,
+                });
+              }
+              currentIndex.current++;
             }
-            currentIndex.current++;
           }
         } else {
           if (currentIndex.current === 1) {
             direction = 0;
           } else {
-            if (flatListRef.current) {
-              flatListRef.current.scrollToIndex({
-                animated: true,
-                index: currentIndex.current - 1,
-              });
+            if (relatedBooks.data.length > 0) {
+              if (flatListRef.current) {
+                flatListRef.current.scrollToIndex({
+                  animated: true,
+                  index: currentIndex.current - 1,
+                });
+              }
+              currentIndex.current--;
             }
-            currentIndex.current--;
           }
         }
       }, 2000);

@@ -62,11 +62,11 @@ export const BookCartsScreen = ({ navigation, route }) => {
   const onBuy = () => {
     const selectedCarts = carts.filter((item) => item.isChecked);
     // const cartItems = selectedCarts.map((item) => item._id);
-    if (!selectedCarts) {
-      setToastContent({
-        title: "Lỗi",
-        message: "Vui lòng chọn sản phẩm",
-        isError: true,
+    if (!selectedCarts.length) {
+      toast.show("Vui lòng chọn sách để mượn!", {
+        type: "danger",
+        duration: 3000,
+        animationType: "zoom-in",
       });
       return;
     }
